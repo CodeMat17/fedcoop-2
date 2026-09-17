@@ -3,7 +3,8 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { CordNode, ScrollCord } from "@/components/cord/Cord";
 import { CountUp, Magnetic, Reveal, Stagger, StaggerItem } from "@/components/motion/primitives";
-import { MapTeaser } from "@/components/map/MapTeaser";
+import { NetworkMap } from "@/components/home/NetworkMap";
+import { projectNetwork } from "@/lib/geo";
 import { Testimonials } from "@/components/home/Testimonials";
 import { EventCard, PostCard } from "@/components/shared/Cards";
 import { EmptyState, Rich } from "@/components/shared/Page";
@@ -43,6 +44,11 @@ export default async function Home() {
   const now = currentTime();
   const upcoming = events.filter((e) => e.startsAt >= now).sort((a, b) => a.startsAt - b.startsAt).slice(0, 2);
   const latest = posts.slice(0, 3);
+  const network = projectNetwork(
+    560,
+    460,
+    Object.fromEntries(stateStats.map((s) => [s.stateCode, s.cooperativeCount])),
+  );
 
   return (
     <>
@@ -136,40 +142,21 @@ export default async function Home() {
           <div className="lg:col-span-5">
             <h2 className="t-section">FEDCOOP reaches all 36 states and the FCT.</h2>
             <p className="mt-5 max-w-[34rem] text-ink-muted">
-              Federal MDAs have staff in every state, and so do their cooperatives. The map shows verified counts of
-              member societies by state. Where a figure has not been verified, the state is hatched.
+              Federal MDAs have staff in every state, and so do their cooperatives. The map traces the network of member
+              societies linking every state back to the federation.
             </p>
             <Link href="/cooperatives" className={cn(btn.secondary, "mt-8")}>
               Explore Cooperatives <ArrowRight className="size-4" strokeWidth={1.5} />
             </Link>
           </div>
-          <Reveal className="lg:col-span-7">
-            <MapTeaser stats={stateStats} />
+          <Reveal className="h-80 sm:h-105 lg:col-span-7 lg:h-130">
+            <NetworkMap {...network} />
           </Reveal>
         </div>
       </section>
 
       {/* 8.6 Impact numbers */}
-      <section id="impact" aria-labelledby="impact-title" className="bg-cord-soft py-20 md:py-28">
-        <div className="shell relative">
-          <h2 id="impact-title" className="sr-only">
-            FEDCOOP in numbers
-          </h2>
-          <Stagger as="ul" className="grid grid-cols-2 gap-x-6 gap-y-12 lg:grid-cols-4">
-            {IMPACT.map((i) => {
-              const s = stat(stats, i.key);
-              return (
-                <StaggerItem as="li" key={i.key}>
-                  <p className="t-stat text-cord">
-                    <CountUp value={s?.value ?? null} suffix={s ? i.suffix : ""} />
-                  </p>
-                  <p className="t-meta mt-3 max-w-[16ch] text-ink">{s ? s.label || i.label : "figure pending verification"}</p>
-                </StaggerItem>
-              );
-            })}
-          </Stagger>
-        </div>
-      </section>
+    
 
       {/* 8.7 News + events */}
       <section id="latest" className="section below-fold">

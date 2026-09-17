@@ -9,7 +9,7 @@ export const SITE = {
   address: ["Federal Secretariat Complex", "Phase 1, Abuja, FCT", "Nigeria"],
   phone: "+234 (0) 916 248 4000",
   phoneHref: "tel:+2349162484000",
-  email: "info@fedcoop.ng",
+  email: "info@fedcoop.org",
   hours: "Monday to Friday, 8:00 to 16:00 WAT",
 } as const;
 
