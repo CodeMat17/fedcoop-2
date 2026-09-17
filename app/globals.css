@@ -1,26 +1,340 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ------------------------------------------------------------------ */
+/* Tokens — three colours, everything else is a tint or shade (§3.2)  */
+/* ------------------------------------------------------------------ */
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --cord: #0e4d3c;
+  --cord-soft: #e4eee9;
+  --cord-line: #c7dad2;
+  --brass: #b5761a;
+  --brass-soft: #f6e9d2;
+  --ink: #101a17;
+  --ink-muted: #4b5b55;
+  --paper: #f6f8f6;
+  --paper-raise: #ffffff;
+  --danger: #a3261b;
+  --navy: #0f1f3a;
+  --navy-soft: #e8edf4;
+
+  /* shadcn / base-ui bridge */
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --border: var(--cord-line);
+  --ring: var(--brass);
+  --input: var(--cord-line);
+  --primary: var(--cord);
+  --primary-foreground: var(--paper);
+  --secondary: var(--paper-raise);
+  --secondary-foreground: var(--ink);
+  --muted: var(--cord-soft);
+  --muted-foreground: var(--ink-muted);
+  --accent: var(--cord-soft);
+  --accent-foreground: var(--ink);
+  --popover: var(--paper-raise);
+  --popover-foreground: var(--ink);
+  --destructive: var(--danger);
+  --radius: 0.75rem;
+
+  color-scheme: light;
+}
+
+.dark {
+  --cord: #3fbf93;
+  --cord-soft: #12241e;
+  --cord-line: #1e362e;
+  --brass: #e3a233;
+  --brass-soft: #2a2013;
+  --ink: #f2f5f3;
+  --ink-muted: #9aaea6;
+  --paper: #08110e;
+  --paper-raise: #0e1b16;
+  --danger: #f08a7e;
+  --navy: #060d1c;
+  --navy-soft: #0a1526;
+
+  color-scheme: dark;
 }
 
 @theme inline {
+  --color-cord: var(--cord);
+  --color-cord-soft: var(--cord-soft);
+  --color-cord-line: var(--cord-line);
+  --color-brass: var(--brass);
+  --color-brass-soft: var(--brass-soft);
+  --color-ink: var(--ink);
+  --color-ink-muted: var(--ink-muted);
+  --color-paper: var(--paper);
+  --color-paper-raise: var(--paper-raise);
+  --color-danger: var(--danger);
+  --color-navy: var(--navy);
+  --color-navy-soft: var(--navy-soft);
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-border: var(--border);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-destructive: var(--destructive);
+  --radius-md: 4px;
+
+  --font-sans: var(--font-nunito), ui-sans-serif, system-ui, sans-serif;
+
+  --radius-chip: 4px;
+  --radius-card: 12px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ------------------------------------------------------------------ */
+/* Type scale (§3.3)                                                   */
+/* ------------------------------------------------------------------ */
+
+@utility t-display {
+  font-size: clamp(2.75rem, 1.6rem + 5vw, 5.5rem);
+  font-weight: 900;
+  letter-spacing: -0.04em;
+  line-height: 0.95;
+}
+@utility t-title {
+  font-size: clamp(2rem, 1.5rem + 2.2vw, 3.25rem);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+@utility t-section {
+  font-size: clamp(1.5rem, 1.2rem + 1.3vw, 2.25rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+@utility t-card {
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+@utility t-lead {
+  font-size: clamp(1.125rem, 1rem + 0.5vw, 1.375rem);
+  font-weight: 300;
+  letter-spacing: -0.01em;
+  line-height: 1.55;
+}
+@utility t-stat {
+  font-size: clamp(2.5rem, 2rem + 2.2vw, 4rem);
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+@utility t-meta {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+}
+
+/* ------------------------------------------------------------------ */
+/* Layout (§3.4) — 20px gutters, 88px cord gutter on desktop            */
+/* ------------------------------------------------------------------ */
+
+@utility shell {
+  width: 100%;
+  max-width: calc(1200px + 88px + 40px);
+  margin-inline: auto;
+  padding-inline: 20px;
+  @media (min-width: 1024px) {
+    padding-left: calc(88px + 20px);
+    padding-right: 40px;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@utility section {
+  padding-block: 5rem;
+  border-top: 1px solid var(--cord-line);
+  @media (min-width: 768px) {
+    padding-block: 8rem;
+  }
+}
+
+@utility prose-col {
+  max-width: 680px;
+}
+
+@utility below-fold {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 800px;
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-size: clamp(1rem, 0.97rem + 0.12vw, 1.0625rem);
+    line-height: 1.7;
+    -webkit-font-smoothing: antialiased;
+  }
+  [id] {
+    scroll-margin-top: 96px;
+  }
+  :focus-visible {
+    outline: 2px solid var(--brass);
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: var(--brass-soft);
+    color: var(--ink);
+  }
+  table,
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Rich text stored as rendered HTML (§18.6) */
+.rich {
+  max-width: 680px;
+}
+.rich > * + * {
+  margin-top: 1.1em;
+}
+.rich h2 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-top: 2em;
+}
+.rich h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-top: 1.6em;
+}
+.rich a {
+  color: var(--cord);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+.rich ul {
+  list-style: disc;
+  padding-left: 1.25rem;
+}
+.rich ol {
+  list-style: decimal;
+  padding-left: 1.25rem;
+}
+.rich blockquote {
+  border-left: 3px solid var(--cord);
+  padding-left: 1rem;
+  font-weight: 300;
+  font-size: 1.15em;
+}
+.rich img {
+  border-radius: 12px;
+}
+
+/* Hatch for "no verified figure" on the map (§13.1) */
+.hatch {
+  fill: url(#hatch);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .marquee-track {
+    animation: none !important;
+  }
+}
+
+/* Hero background — navy depth, guilloche security-print texture, glow behind the map */
+.hero-bg {
+  background:
+    radial-gradient(60% 55% at 75% 50%, color-mix(in oklab, var(--brass) 9%, transparent), transparent 70%),
+    radial-gradient(80% 70% at 15% 10%, color-mix(in oklab, var(--cord) 8%, transparent), transparent 70%),
+    linear-gradient(180deg, var(--navy-soft), var(--paper));
+}
+.hero-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' fill='none' stroke='%230f1f3a' stroke-width='.6'%3E%3Ccircle cx='60' cy='60' r='58'/%3E%3Ccircle cx='60' cy='60' r='44'/%3E%3Ccircle cx='0' cy='0' r='44'/%3E%3Ccircle cx='120' cy='0' r='44'/%3E%3Ccircle cx='0' cy='120' r='44'/%3E%3Ccircle cx='120' cy='120' r='44'/%3E%3Cellipse cx='60' cy='60' rx='58' ry='22'/%3E%3Cellipse cx='60' cy='60' rx='22' ry='58'/%3E%3C/svg%3E");
+  mask-image: radial-gradient(90% 80% at 60% 45%, #000, transparent 85%);
+}
+.dark .hero-bg::before {
+  opacity: 0.07;
+  filter: invert(1);
+}
+.hero-bg::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 30%;
+  background: linear-gradient(to bottom, transparent, var(--paper));
+}
+
+/* Hero network — breathing after the draw-in */
+@keyframes net-breathe {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.45; }
+}
+@keyframes net-halo {
+  0% { transform: scale(1); opacity: 0.9; }
+  100% { transform: scale(3.2); opacity: 0; }
+}
+@keyframes net-pulse {
+  0% { stroke-dashoffset: 100; opacity: 0; }
+  10% { opacity: 1; }
+  60%, 100% { stroke-dashoffset: -8; opacity: 0; }
+}
+.net-node {
+  animation: net-breathe 4.5s ease-in-out infinite;
+}
+.net-marker {
+  animation: net-breathe 6s ease-in-out infinite;
+}
+.net-halo {
+  animation: net-halo 3s ease-out infinite;
+}
+.net-pulse {
+  fill: none;
+  stroke: var(--brass);
+  stroke-width: 1.75;
+  stroke-linecap: round;
+  stroke-dasharray: 8 100;
+  stroke-dashoffset: 100;
+  opacity: 0;
+  animation: net-pulse 5s ease-in infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .net-node,
+  .net-marker,
+  .net-halo,
+  .net-pulse {
+    animation: none !important;
+  }
 }

@@ -1,0 +1,45 @@
+export type NigeriaState = { code: string; name: string; slug: string };
+
+/** 36 states + the FCT. Codes follow ISO 3166-2:NG and match data/nigeria-states.json. */
+export const STATES: readonly NigeriaState[] = [
+  { code: "NG-AB", name: "Abia", slug: "abia" },
+  { code: "NG-AD", name: "Adamawa", slug: "adamawa" },
+  { code: "NG-AK", name: "Akwa Ibom", slug: "akwa-ibom" },
+  { code: "NG-AN", name: "Anambra", slug: "anambra" },
+  { code: "NG-BA", name: "Bauchi", slug: "bauchi" },
+  { code: "NG-BY", name: "Bayelsa", slug: "bayelsa" },
+  { code: "NG-BE", name: "Benue", slug: "benue" },
+  { code: "NG-BO", name: "Borno", slug: "borno" },
+  { code: "NG-CR", name: "Cross River", slug: "cross-river" },
+  { code: "NG-DE", name: "Delta", slug: "delta" },
+  { code: "NG-EB", name: "Ebonyi", slug: "ebonyi" },
+  { code: "NG-ED", name: "Edo", slug: "edo" },
+  { code: "NG-EK", name: "Ekiti", slug: "ekiti" },
+  { code: "NG-EN", name: "Enugu", slug: "enugu" },
+  { code: "NG-FC", name: "FCT", slug: "fct" },
+  { code: "NG-GO", name: "Gombe", slug: "gombe" },
+  { code: "NG-IM", name: "Imo", slug: "imo" },
+  { code: "NG-JI", name: "Jigawa", slug: "jigawa" },
+  { code: "NG-KD", name: "Kaduna", slug: "kaduna" },
+  { code: "NG-KN", name: "Kano", slug: "kano" },
+  { code: "NG-KT", name: "Katsina", slug: "katsina" },
+  { code: "NG-KE", name: "Kebbi", slug: "kebbi" },
+  { code: "NG-KO", name: "Kogi", slug: "kogi" },
+  { code: "NG-KW", name: "Kwara", slug: "kwara" },
+  { code: "NG-LA", name: "Lagos", slug: "lagos" },
+  { code: "NG-NA", name: "Nasarawa", slug: "nasarawa" },
+  { code: "NG-NI", name: "Niger", slug: "niger" },
+  { code: "NG-OG", name: "Ogun", slug: "ogun" },
+  { code: "NG-ON", name: "Ondo", slug: "ondo" },
+  { code: "NG-OS", name: "Osun", slug: "osun" },
+  { code: "NG-OY", name: "Oyo", slug: "oyo" },
+  { code: "NG-PL", name: "Plateau", slug: "plateau" },
+  { code: "NG-RI", name: "Rivers", slug: "rivers" },
+  { code: "NG-SO", name: "Sokoto", slug: "sokoto" },
+  { code: "NG-TA", name: "Taraba", slug: "taraba" },
+  { code: "NG-YO", name: "Yobe", slug: "yobe" },
+  { code: "NG-ZA", name: "Zamfara", slug: "zamfara" },
+];
+
+export const stateByCode = (code: string) => STATES.find((s) => s.code === code);
+export const stateBySlug = (slug: string) => STATES.find((s) => s.slug === slug);
