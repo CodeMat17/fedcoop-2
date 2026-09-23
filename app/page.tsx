@@ -1,13 +1,13 @@
-import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { CordNode, ScrollCord } from "@/components/cord/Cord";
 import { Magnetic, Reveal } from "@/components/motion/primitives";
 import { NetworkMap } from "@/components/home/NetworkMap";
+import { Seal } from "@/components/home/Seal";
 import { projectNetwork } from "@/lib/geo";
 import { Testimonials } from "@/components/home/Testimonials";
 import { EventCard, PostCard } from "@/components/shared/Cards";
-import { EmptyState, Rich } from "@/components/shared/Page";
+import { CtaBand, EmptyState, Rich } from "@/components/shared/Page";
 import { PillarIcon } from "@/components/shared/PillarIcon";
 import {
   getEvents,
@@ -20,7 +20,7 @@ import {
 } from "@/lib/data";
 import { currentTime } from "@/lib/format";
 import { MEMBERSHIP_CTA, PILLARS } from "@/lib/site";
-import { btn, card, cn, link } from "@/lib/ui";
+import { btn, cn } from "@/lib/ui";
 
 export const revalidate = 3600;
 
@@ -30,6 +30,16 @@ const IMPACT = [
   { key: "statesCovered", label: "states covered, with the FCT", suffix: "" },
   { key: "pillars", label: "pillars of service", suffix: "" },
 ] as const;
+
+/** Facts that need no verified figure — they are true by the federation's structure. */
+const HERO_FACTS = [
+  { value: "36 + FCT", label: "States reached" },
+  { value: "Six", label: "Pillars of service" },
+  { value: "One", label: "National voice" },
+];
+
+const arrowLink =
+  "group inline-flex min-h-11 shrink-0 items-center gap-2 font-semibold whitespace-nowrap text-ink transition-colors hover:text-cord";
 
 export default async function Home() {
   const [pages, stats, stateStats, posts, events, testimonials] = await Promise.all([
@@ -55,49 +65,45 @@ export default async function Home() {
       <ScrollCord braided />
 
       {/* 8.1 Hero */}
-      <section className='relative isolate flex min-h-[85svh] items-center overflow-hidden pt-18 pb-16 md:min-h-[92svh] md:pb-24'>
+      <section className='relative isolate flex min-h-[88svh] items-center overflow-hidden pt-10 pb-20 md:min-h-[92svh] md:pb-28'>
         <div aria-hidden='true' className='hero-bg absolute inset-0 -z-10' />
-        <div className='shell relative grid items-center gap-12 lg:grid-cols-[1.1fr_0.9fr]'>
+        <div className='shell relative grid items-center gap-14 lg:grid-cols-[1.35fr_0.65fr] lg:gap-12'>
           <div>
             <Reveal>
-              <h1 className='t-display max-w-[20ch] text-[clamp(2.25rem,1.5rem+3vw,4rem)]! leading-[1.02]!'>
-                One Federation. <br className='hidden md:block' />
-                <span className='text-cord'>
-                  Hundreds of Cooperatives.
-                </span>{" "}
-                <br className='hidden md:block' />
-                One Stronger Future.
+              <p className='eyebrow'>Staff cooperatives of Nigeria&apos;s federal MDAs</p>
+            </Reveal>
+            <Reveal delay={0.08}>
+              <h1 className='mt-7 text-[clamp(2.375rem,1.3rem+3.4vw,4rem)] leading-[1.04] font-black tracking-[-0.04em]'>
+                <span className='block'>One Federation.</span>
+                <span className='block text-cord'>Hundreds of Cooperatives.</span>
+                <span className='block'>One Stronger Future.</span>
               </h1>
             </Reveal>
-            <Reveal delay={0.12}>
-              <p className='t-lead mt-6 max-w-[52ch] text-ink-muted'>
+            <Reveal delay={0.16}>
+              <p className='t-lead mt-8 max-w-[48ch] text-ink-muted'>
                 FEDCOOP is the unifying umbrella body for staff cooperative
-                societies across Nigeria&apos;s federal MDAs, bringing savings, credit and welfare initiatives
-                together to create greater collective impact.
+                societies across Nigeria&apos;s federal MDAs, bringing savings,
+                credit and welfare initiatives together to create greater
+                collective impact.
               </p>
             </Reveal>
-            <Reveal delay={0.2}>
-              <div className='mt-10 flex flex-wrap gap-3'>
+            <Reveal delay={0.24}>
+              <div className='mt-10 flex flex-wrap items-center gap-x-8 gap-y-4'>
                 <Magnetic>
-                  <Link href='/cooperatives' className={btn.primary}>
-                    Find your co-op
+                  <Link href='/cooperatives' className={cn(btn.primary, "min-h-12 px-6")}>
+                    Find your coop
                   </Link>
                 </Magnetic>
-                <Link href='/what-we-do' className={btn.secondary}>
+                <Link href='/what-we-do' className={arrowLink}>
                   What we do
+                  <ArrowRight className='size-4 transition-transform group-hover:translate-x-1' strokeWidth={1.5} />
                 </Link>
               </div>
             </Reveal>
+         
           </div>
-          <Reveal delay={0.15} className='flex justify-center lg:justify-end'>
-            <Image
-              src='/logo-2.webp'
-              alt='FEDCOOP logo'
-              width={520}
-              height={520}
-              priority
-              className='h-auto w-full max-w-70 object-contain drop-shadow-xl sm:max-w-80 lg:max-w-100'
-            />
+          <Reveal delay={0.15} className='hidden w-full max-w-[27rem] justify-self-end lg:block'>
+            <Seal />
           </Reveal>
         </div>
       </section>
@@ -105,20 +111,23 @@ export default async function Home() {
       {/* 8.3 Mission and vision — hidden entirely when empty */}
       {(pages.mission || pages.vision) && (
         <section id='mission' className='section'>
-          <div className='shell relative grid gap-12 md:grid-cols-2'>
+          <div className='shell relative'>
             <CordNode />
-            {[pages.mission, pages.vision].map(
-              (p) =>
-                p && (
-                  <div key={p.key}>
-                    <h2 className='t-section'>{p.title}</h2>
-                    <Rich
-                      html={p.body}
-                      className='t-lead mt-5 text-ink-muted'
-                    />
-                  </div>
-                ),
-            )}
+            <p className='eyebrow'>Our purpose</p>
+            <div className='mt-10 grid gap-x-16 gap-y-12 md:grid-cols-2'>
+              {[pages.mission, pages.vision].map(
+                (p) =>
+                  p && (
+                    <Reveal key={p.key} className='border-t border-ink/80 pt-6'>
+                      <h2 className='t-meta tracking-[0.12em] text-ink-muted uppercase'>{p.title}</h2>
+                      <Rich
+                        html={p.body}
+                        className='mt-5 text-[clamp(1.25rem,1.05rem+0.8vw,1.625rem)] leading-[1.4] font-semibold tracking-[-0.02em] text-ink'
+                      />
+                    </Reveal>
+                  ),
+              )}
+            </div>
           </div>
         </section>
       )}
@@ -127,21 +136,45 @@ export default async function Home() {
       <section id='pillars' className='section'>
         <div className='shell relative'>
           <CordNode />
-          <h2 className='t-section max-w-[22ch]'>
-            Six pillars hold the federation together.
-          </h2>
-          <ul className='mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3'>
+          <div className='grid gap-8 lg:grid-cols-12 lg:items-end'>
+            <div className='lg:col-span-7'>
+              <p className='eyebrow'>What we do</p>
+              <h2 className='t-section mt-5 max-w-[18ch]'>
+                Six pillars hold the federation together.
+              </h2>
+            </div>
+            <div className='lg:col-span-5'>
+              <p className='max-w-[42ch] text-ink-muted'>
+                Every service FEDCOOP offers its member societies rests on one
+                of six commitments, from a shared national voice to collective
+                investment.
+              </p>
+              <Link href='/what-we-do' className={cn(arrowLink, "mt-3")}>
+                Explore our work
+                <ArrowRight className='size-4 transition-transform group-hover:translate-x-1' strokeWidth={1.5} />
+              </Link>
+            </div>
+          </div>
+          <ul className='mt-14 grid gap-px overflow-hidden rounded-card border border-cord-line bg-cord-line md:grid-cols-2 lg:grid-cols-3'>
             {PILLARS.map((p) => (
-              <li key={p.slug}>
+              <li key={p.slug} className='bg-paper'>
                 <Link
                   href={`/what-we-do/${p.slug}`}
-                  className={cn(
-                    card,
-                    "flex h-full flex-col gap-4 p-6 hover:border-cord",
-                  )}>
-                  <PillarIcon slug={p.slug} className='size-6 text-cord' />
-                  <span className='t-card'>{p.name}</span>
-                  <span className='text-ink-muted'>{p.line}</span>
+                  className='group relative flex h-full flex-col p-7 transition-colors duration-300 hover:bg-paper-raise md:p-9'>
+                  <span className='flex items-start justify-between'>
+                    <span className='grid size-12 place-items-center rounded-full border border-cord-line text-cord transition-colors duration-300 group-hover:border-cord group-hover:bg-cord group-hover:text-paper'>
+                      <PillarIcon slug={p.slug} className='size-5' />
+                    </span>
+                    <ArrowUpRight
+                      className='size-5 -translate-x-1 translate-y-1 text-ink-muted opacity-0 transition-all duration-300 group-hover:translate-0 group-hover:text-cord group-hover:opacity-100'
+                      strokeWidth={1.5}
+                      aria-hidden='true'
+                    />
+                  </span>
+                  <span className='mt-10 text-[1.5rem] leading-tight font-extrabold tracking-[-0.03em] text-ink'>
+                    {p.name}
+                  </span>
+                  <span className='mt-3 text-[0.95rem] leading-relaxed text-ink-muted'>{p.line}</span>
                 </Link>
               </li>
             ))}
@@ -149,21 +182,27 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* 8.5 National reach */}
-      <section id='reach' className='section below-fold'>
+      {/* 8.5 National reach — a dark band for rhythm */}
+      <section id='reach' className='dark below-fold relative z-10 overflow-hidden bg-paper py-20 text-ink md:py-32'>
+        <div aria-hidden='true' className='guilloche absolute inset-0 opacity-[0.035] [mask-image:radial-gradient(70%_70%_at_75%_50%,#000,transparent)]' />
+        <div
+          aria-hidden='true'
+          className='absolute inset-0 bg-[radial-gradient(50%_60%_at_72%_50%,color-mix(in_oklab,var(--cord)_16%,transparent),transparent_70%)]'
+        />
         <div className='shell relative grid items-center gap-12 lg:grid-cols-12'>
           <CordNode />
           <div className='lg:col-span-5'>
-            <h2 className='t-section'>
+            <p className='eyebrow'>National reach</p>
+            <h2 className='t-section mt-5'>
               FEDCOOP reaches all 36 states and the FCT.
             </h2>
-            <p className='mt-5 max-w-[34rem] text-ink-muted'>
+            <p className='mt-6 max-w-[34rem] text-ink-muted'>
               Federal MDAs have staff in every state, and so do their
               cooperatives. The map traces the network of member societies
               linking every state back to the federation.
             </p>
-            <Link href='/cooperatives' className={cn(btn.secondary, "mt-8")}>
-              Explore Cooperatives{" "}
+            <Link href='/cooperatives' className={cn(btn.secondary, "mt-10 border-cord-line bg-transparent")}>
+              Explore cooperatives
               <ArrowRight className='size-4' strokeWidth={1.5} />
             </Link>
           </div>
@@ -176,18 +215,22 @@ export default async function Home() {
       {/* 8.6 Impact numbers */}
 
       {/* 8.7 News + events */}
-      <section id='latest' className='section below-fold'>
-        <div className='shell relative grid gap-14 xl:grid-cols-[3fr_2fr]'>
+      <section id='latest' className='section below-fold border-t-0!'>
+        <div className='shell relative grid gap-16 xl:grid-cols-[3fr_2fr]'>
           <CordNode />
           <div>
-            <div className='mb-8 flex items-end justify-between gap-4'>
-              <h2 className='t-section'>Latest news</h2>
-              <Link href='/news' className={link}>
+            <div className='mb-10 flex items-end justify-between gap-4'>
+              <div>
+                <p className='eyebrow'>From the secretariat</p>
+                <h2 className='t-section mt-4'>Latest news</h2>
+              </div>
+              <Link href='/news' className={arrowLink}>
                 All news
+                <ArrowRight className='size-4 transition-transform group-hover:translate-x-1' strokeWidth={1.5} />
               </Link>
             </div>
             {latest.length ? (
-              <ul className='grid gap-4 md:grid-cols-3 xl:grid-cols-2'>
+              <ul className='grid gap-5 md:grid-cols-3 xl:grid-cols-2'>
                 {latest.map((p, i) => (
                   <li key={p._id} className={cn(i === 2 && "xl:hidden")}>
                     <PostCard post={p} />
@@ -201,14 +244,18 @@ export default async function Home() {
             )}
           </div>
           <div>
-            <div className='mb-8 flex items-end justify-between gap-4'>
-              <h2 className='t-section'>Upcoming events</h2>
-              <Link href='/events' className={link}>
+            <div className='mb-10 flex items-end justify-between gap-4'>
+              <div>
+                <p className='eyebrow'>Diary</p>
+                <h2 className='t-section mt-4'>Upcoming events</h2>
+              </div>
+              <Link href='/events' className={arrowLink}>
                 All events
+                <ArrowRight className='size-4 transition-transform group-hover:translate-x-1' strokeWidth={1.5} />
               </Link>
             </div>
             {upcoming.length ? (
-              <ul className='grid gap-4 md:grid-cols-2 xl:grid-cols-1'>
+              <ul className='grid gap-5 md:grid-cols-2 xl:grid-cols-1'>
                 {upcoming.map((e) => (
                   <li key={e._id}>
                     <EventCard event={e} />
@@ -226,26 +273,24 @@ export default async function Home() {
 
       {/* 8.8 Testimonials */}
       {testimonials.length > 0 && (
-        <section id='voices' className='section below-fold'>
+        <section id='voices' className='section below-fold py-20! md:py-24!'>
           <div className='shell relative'>
             <CordNode />
-            <h2 className='t-section mb-10'>What member societies say.</h2>
+            <div className='mb-10 text-center'>
+              <h2 className='eyebrow'>What member societies say</h2>
+            </div>
             <Testimonials items={testimonials} />
           </div>
         </section>
       )}
 
       {/* 8.9 Closing CTA */}
-      <section className='relative z-10 bg-cord py-20 text-paper md:py-28'>
-        <div className='shell'>
-          <h2 className='t-title max-w-[18ch]'>
-            Bring your cooperative into the federation.
-          </h2>
-          <Link href={MEMBERSHIP_CTA.href} className={cn(btn.onCord, "mt-10")}>
-            {MEMBERSHIP_CTA.label}
-          </Link>
-        </div>
-      </section>
+      <CtaBand eyebrow="Membership" title="Bring your cooperative into the federation.">
+        <Link href={MEMBERSHIP_CTA.href} className={cn(btn.onCord, "min-h-12 px-6")}>
+          {MEMBERSHIP_CTA.label}
+          <ArrowRight className="size-4" strokeWidth={1.5} />
+        </Link>
+      </CtaBand>
     </>
   );
 }

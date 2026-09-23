@@ -6,10 +6,11 @@ import { Providers } from "@/components/layout/Providers";
 import { CommandSearch } from "@/components/layout/CommandSearch";
 import { MobileProgress } from "@/components/cord/Cord";
 import { JsonLd } from "@/components/shared/JsonLd";
+import { PublicOnly } from "@/components/layout/PublicOnly";
 import { SITE, SOCIALS } from "@/lib/site";
 import "./globals.css";
 
-const nunito = Nunito({
+const sans = Nunito({
   subsets: ["latin"],
   weight: ["300", "400", "600", "700", "800", "900"],
   variable: "--font-nunito",
@@ -35,7 +36,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en-NG" className={nunito.variable} suppressHydrationWarning>
+    <html lang="en-NG" className={sans.variable} suppressHydrationWarning>
       <body className="flex min-h-svh flex-col">
         <a
           href="#main"
@@ -44,13 +45,17 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           Skip to content
         </a>
         <Providers>
-          <Header />
-          <MobileProgress />
+          <PublicOnly>
+            <Header />
+            <MobileProgress />
+          </PublicOnly>
           <main id="main" className="relative flex-1">
             {children}
           </main>
-          <Footer />
-          <CommandSearch />
+          <PublicOnly>
+            <Footer />
+            <CommandSearch />
+          </PublicOnly>
         </Providers>
         <JsonLd
           data={{

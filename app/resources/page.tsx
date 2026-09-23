@@ -21,6 +21,7 @@ export default async function ResourcesPage() {
     <>
       <PageHero
         title="Resources"
+        eyebrow="Library"
         crumbs={[{ label: "Resources", href: "/resources" }]}
         standfirst="Templates, guides, reports and training materials for management committees and members."
       />
@@ -34,7 +35,7 @@ export default async function ResourcesPage() {
                 <ul className="flex flex-wrap gap-2">
                   {categories.map((c) => (
                     <li key={c}>
-                      <a href={`#${c.toLowerCase().replace(/\W+/g, "-")}`} className="inline-flex min-h-11 items-center rounded-chip border border-cord-line px-4 font-bold hover:border-cord">
+                      <a href={`#${c.toLowerCase().replace(/\W+/g, "-")}`} className="inline-flex min-h-10 items-center rounded-full border border-cord-line bg-paper-raise px-4 text-[0.9rem] font-semibold transition-colors hover:border-cord hover:text-cord">
                         {c}
                       </a>
                     </li>
@@ -44,10 +45,10 @@ export default async function ResourcesPage() {
             )}
             {categories.map((c) => (
               <section key={c} id={c.toLowerCase().replace(/\W+/g, "-")} aria-labelledby={`${c}-h`}>
-                <h2 id={`${c}-h`} className="t-section mb-5">{c}</h2>
-                <div className="overflow-x-auto rounded-card border border-cord-line">
+                <h2 id={`${c}-h`} className="t-section mb-6">{c}</h2>
+                <div className="overflow-x-auto rounded-card border border-cord-line bg-paper-raise">
                   <Table className="min-w-[40rem] text-left text-base">
-                    <TableHeader className="t-meta border-b border-cord-line bg-paper-raise text-ink-muted">
+                    <TableHeader className="t-meta border-b border-cord-line bg-cord-soft/60 tracking-[0.08em] text-ink-muted uppercase">
                       <TableRow className="hover:bg-transparent">
                         <TableHead scope="col" className="h-auto px-4 py-3 text-ink-muted">Title</TableHead>
                         <TableHead scope="col" className="h-auto px-4 py-3 text-ink-muted">Type</TableHead>
@@ -57,7 +58,7 @@ export default async function ResourcesPage() {
                     </TableHeader>
                     <TableBody>
                       {resources.filter((r) => r.category === c).map((r) => (
-                        <TableRow key={r._id} className="border-b border-cord-line last:border-0 hover:bg-transparent">
+                        <TableRow key={r._id} className="border-b border-cord-line transition-colors last:border-0 hover:bg-cord-soft/40">
                           <TableHead scope="row" className="h-auto px-4 py-3 whitespace-normal text-ink">
                             <a href={r.fileUrl} target="_blank" rel="noopener noreferrer" className="inline-flex min-h-11 items-center gap-2 font-bold hover:text-cord">
                               <FileDown className="size-4 shrink-0 text-cord" strokeWidth={1.5} aria-hidden="true" />

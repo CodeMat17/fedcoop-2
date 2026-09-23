@@ -23,7 +23,7 @@ export function formError(reason?: string): string {
     case "closed":
       return "Registration for this event is closed.";
     case "offline":
-      return "The form is not connected yet. Email info@fedcoop.ng or call +234 (0) 916 248 4000.";
+      return "The form is not connected yet. Email email@fedcoop.org or call +234 (0) 916 248 4000.";
     default:
       return "The message did not send. Check your connection and try again.";
   }

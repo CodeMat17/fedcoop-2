@@ -3,13 +3,13 @@ export const SITE = {
   legalName: "Federal Civil Service Staff of Nigeria Cooperative Societies Union Limited",
   motto:
     "Unifying Workers Cooperatives for a Better World through Cooperation, Collaboration, Advocacy, Peer Review, Training and Investment.",
-  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://fedcoop.ng",
+  url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://fedcoop.org",
   description:
     "FEDCOOP is the national union of staff cooperative societies in Nigeria's federal Ministries, Departments and Agencies.",
   address: ["Federal Secretariat Complex", "Phase 1, Abuja, FCT", "Nigeria"],
   phone: "+234 (0) 916 248 4000",
   phoneHref: "tel:+2349162484000",
-  email: "info@fedcoop.org",
+  email: "email@fedcoop.org",
   hours: "Monday to Friday, 8:00 to 16:00 WAT",
 } as const;
 
@@ -155,6 +155,8 @@ export const PILLARS: readonly Pillar[] = [
 ];
 
 export const pillarBySlug = (slug: string) => PILLARS.find((p) => p.slug === slug);
+
+export const GALLERY_CATEGORIES = ["AGM", "Training", "Peer Review", "Advocacy", "Investment", "Partnerships", "Community"];
 
 export type EnquiryCategory =
   | "membership"

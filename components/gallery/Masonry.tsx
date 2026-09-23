@@ -5,12 +5,11 @@ import Image from "next/image";
 import { useCallback, useLayoutEffect, useRef, useState, useSyncExternalStore } from "react";
 import { Button } from "@/components/ui/button";
 import { Stagger, StaggerItem } from "@/components/motion/primitives";
+import { GALLERY_CATEGORIES } from "@/lib/site";
 import type { Photo } from "@/lib/types";
 import { cn } from "@/lib/ui";
 
 const Lightbox = dynamic(() => import("./Lightbox"), { ssr: false });
-
-const GALLERY_CATEGORIES = ["AGM", "Training", "Peer Review", "Advocacy", "Investment", "Partnerships", "Community"];
 
 const ROW = 8; // grid-auto-rows: 8px (§14.2)
 

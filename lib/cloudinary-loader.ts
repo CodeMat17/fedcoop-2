@@ -17,3 +17,16 @@ export default function cloudinaryLoader({ src, width, quality }: LoaderArgs): s
   if (!cloud) return src;
   return `https://res.cloudinary.com/${cloud}/image/upload/${params}/${src}`;
 }
+
+/**
+ * Pre-crops an image to `aspect` on Cloudinary, keeping faces (or, failing
+ * that, the most salient area) in frame — CSS object-cover only crops around
+ * the centre, which cuts heads off portrait photos. The loader chains its
+ * resize in front of this segment.
+ */
+export function faceCrop(src: string, aspect: "16:9" | "21:9"): string {
+  const crop = `c_fill,g_auto:faces,ar_${aspect}`;
+  if (src.includes("res.cloudinary.com")) return src.replace("/upload/", `/upload/${crop}/`);
+  if (src.startsWith("http") || src.startsWith("/")) return src;
+  return `${crop}/${src}`;
+}

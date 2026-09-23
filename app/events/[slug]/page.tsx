@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CalendarDays, Images, MapPin } from "lucide-react";
 import { AddToCalendar, Countdown, RsvpForm } from "@/components/events/EventTools";
+import { CoverHero } from "@/components/shared/CoverHero";
 import { JsonLd } from "@/components/shared/JsonLd";
 import { PageHero, Rich } from "@/components/shared/Page";
 import { getEvent, getEvents, getResources } from "@/lib/data";
@@ -50,14 +50,14 @@ export default async function EventPage({ params }: PageProps<"/events/[slug]">)
         }}
       />
       <PageHero title={e.title} crumbs={[{ label: "Events", href: "/events" }, { label: e.title, href: `/events/${e.slug}` }]} standfirst={e.summary}>
-        <ul className="mt-8 space-y-2 font-semibold">
-          <li className="flex items-center gap-2">
+        <ul className="mt-8 flex flex-wrap gap-3 font-semibold">
+          <li className="flex min-h-11 items-center gap-2 rounded-full border border-cord-line bg-paper-raise/70 px-4 text-[0.93rem]">
             <CalendarDays className="size-5 text-cord" strokeWidth={1.5} aria-hidden="true" />
             <time dateTime={new Date(e.startsAt).toISOString()}>
               {fmtDate(e.startsAt)}, {fmtTime(e.startsAt)}
             </time>
           </li>
-          <li className="flex items-center gap-2">
+          <li className="flex min-h-11 items-center gap-2 rounded-full border border-cord-line bg-paper-raise/70 px-4 text-[0.93rem]">
             <MapPin className="size-5 text-cord" strokeWidth={1.5} aria-hidden="true" /> {e.venue}, {e.city}
           </li>
         </ul>
@@ -69,17 +69,14 @@ export default async function EventPage({ params }: PageProps<"/events/[slug]">)
         )}
       </PageHero>
 
-      {e.coverUrl && (
-        <div className="relative mb-14 aspect-video max-h-[70svh] w-full bg-cord-soft">
-          <Image src={e.coverUrl} alt="" fill priority sizes="100vw" className="object-cover" />
-        </div>
-      )}
+      {e.coverUrl && <CoverHero src={e.coverUrl} alt="" />}
 
       <div className="shell space-y-16 pb-24">
         <Rich html={e.body} />
 
         {upcoming && e.rsvpEnabled && (
           <section aria-labelledby="rsvp-h" className="max-w-2xl border-t border-cord-line pt-12">
+            <p className="eyebrow mb-4">RSVP</p>
             <h2 id="rsvp-h" className="t-section mb-2">Register interest</h2>
             <p className="mb-6 text-ink-muted">Tell FEDCOOP who is coming so the secretariat can plan seating and materials.</p>
             <RsvpForm eventId={e._id} />

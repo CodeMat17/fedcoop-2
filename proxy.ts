@@ -1,44 +1,63 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
+import { NextResponse, type NextFetchEvent, type NextRequest } from "next/server";
 
 /**
  * Runs on every request, so it does two cheap things only (§18.10):
- * security headers, and an optimistic session-cookie check for /admin.
- * Real authorisation happens inside Convex.
+ * security headers, and Clerk's session check for /admin. Clerk runs on admin
+ * routes only, so public pages pay nothing for it. Role checks (authorisation)
+ * happen inside Convex.
  */
-export function proxy(request: NextRequest) {
-  const { pathname } = request.nextUrl;
 
-  if (
-    pathname.startsWith("/admin") &&
-    pathname !== "/admin/sign-in" &&
-    !request.cookies.has("__convexAuthJWT")
-  ) {
-    return NextResponse.redirect(new URL("/admin/sign-in", request.url));
+const isAuthPage = createRouteMatcher(["/admin/sign-in(.*)", "/admin/sign-up(.*)", "/admin/sign-out"]);
+
+const clerk = clerkMiddleware(async (auth, request) => {
+  if (!isAuthPage(request)) await auth.protect();
+});
+
+/** The Clerk Frontend API host is encoded in the publishable key: pk_<env>_<base64(host$)>. */
+function clerkOrigin() {
+  const encoded = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY?.split("_")[2];
+  if (!encoded) return "";
+  try {
+    return `https://${atob(encoded).replace(/\$$/, "")}`;
+  } catch {
+    return "";
   }
+}
 
-  const response = NextResponse.next();
+const CLERK = clerkOrigin();
+const isDev = process.env.NODE_ENV !== "production";
+
+const CSP = [
+  "default-src 'self'",
+  `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://challenges.cloudflare.com ${CLERK}`,
+  "style-src 'self' 'unsafe-inline'",
+  "img-src 'self' data: blob: https://res.cloudinary.com https://img.clerk.com",
+  "font-src 'self' data:",
+  `connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.convex.site https://api.cloudinary.com https://res.cloudinary.com https://clerk-telemetry.com ${CLERK}`,
+  "frame-src https://www.google.com https://challenges.cloudflare.com",
+  "worker-src 'self' blob:",
+  "object-src 'none'",
+  "base-uri 'self'",
+  "form-action 'self'",
+  "frame-ancestors 'none'",
+].join("; ");
+
+export async function proxy(request: NextRequest, event: NextFetchEvent) {
+  const response = request.nextUrl.pathname.startsWith("/admin")
+    ? ((await clerk(request, event)) ?? NextResponse.next())
+    : NextResponse.next();
+
   const h = response.headers;
-  const isDev = process.env.NODE_ENV !== "production";
-  h.set(
-    "Content-Security-Policy",
-    [
-      "default-src 'self'",
-      `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""} https://challenges.cloudflare.com`,
-      "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https://res.cloudinary.com",
-      "font-src 'self' data:",
-      "connect-src 'self' https://*.convex.cloud wss://*.convex.cloud https://*.convex.site",
-      "frame-src https://www.google.com https://challenges.cloudflare.com",
-      "object-src 'none'",
-      "base-uri 'self'",
-      "form-action 'self'",
-      "frame-ancestors 'none'",
-    ].join("; "),
-  );
-  h.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
-  h.set("X-Content-Type-Options", "nosniff");
-  h.set("Referrer-Policy", "strict-origin-when-cross-origin");
-  h.set("Permissions-Policy", "camera=(), microphone=(), geolocation=(), interest-cohort=()");
+  try {
+    h.set("Content-Security-Policy", CSP);
+    h.set("Strict-Transport-Security", "max-age=63072000; includeSubDomains; preload");
+    h.set("X-Content-Type-Options", "nosniff");
+    h.set("Referrer-Policy", "strict-origin-when-cross-origin");
+    h.set("Permissions-Policy", "camera=(), microphone=(), geolocation=(), interest-cohort=()");
+  } catch {
+    // Redirect responses can carry immutable headers; they render nothing, so skip.
+  }
   return response;
 }
 

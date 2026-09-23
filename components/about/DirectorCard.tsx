@@ -11,24 +11,33 @@ export function DirectorCard({ d, large = false }: { d: Director; large?: boolea
   const body = (
     <>
       <div className="relative aspect-[4/5] overflow-hidden rounded-t-card bg-cord-soft">
+        <svg aria-hidden="true" viewBox="0 0 200 250" className="absolute inset-0 h-full w-full text-cord" preserveAspectRatio="xMidYMid slice">
+          <g fill="none" stroke="currentColor" strokeOpacity={0.1} strokeWidth={0.6}>
+            {Array.from({ length: 18 }, (_, i) => (
+              <ellipse key={i} cx={100} cy={125} rx={90} ry={30} transform={`rotate(${i * 10} 100 125)`} />
+            ))}
+          </g>
+        </svg>
         {d.photoUrl ? (
-          <Image src={d.photoUrl} alt={`Portrait of ${d.name}`} fill sizes={large ? "(min-width: 1024px) 33vw, 100vw" : "(min-width: 1024px) 25vw, 50vw"} className="object-cover" />
+          <Image src={d.photoUrl} alt={`Portrait of ${d.name}`} fill sizes={large ? "(min-width: 1024px) 33vw, 100vw" : "(min-width: 1024px) 25vw, 50vw"} className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]" />
         ) : (
-          <span aria-hidden="true" className="absolute inset-0 grid place-items-center text-[3rem] font-black text-cord/40">{initials}</span>
+          <span aria-hidden="true" className="absolute inset-0 grid place-items-center">
+            <span className="grid size-24 place-items-center rounded-full bg-paper-raise text-[1.75rem] font-black tracking-[-0.03em] text-cord ring-1 ring-cord-line">{initials}</span>
+          </span>
         )}
       </div>
-      <div className="p-5 text-left">
+      <div className="border-t border-cord-line p-5 text-left">
         <p className={large ? "t-card" : "text-base leading-snug font-bold"}>{d.name}</p>
-        <p className="mt-1 font-bold text-cord">{d.office}</p>      
+        <p className="mt-1.5 text-[0.72rem] font-bold tracking-[0.12em] text-brass uppercase">{d.office}</p>
       </div>
     </>
   );
 
-  if (!d.bio) return <article className={card}>{body}</article>;
+  if (!d.bio) return <article className={cn(card, "group overflow-hidden")}>{body}</article>;
 
   return (
     <Dialog.Root>
-      <Dialog.Trigger className={cn(card, "block w-full hover:border-cord")} aria-label={`${d.name}, ${d.office}. Read biography`}>
+      <Dialog.Trigger className={cn(card, "group block w-full overflow-hidden hover:-translate-y-0.5 hover:border-cord/50 hover:shadow-[0_24px_48px_-28px_color-mix(in_oklab,var(--cord)_45%,transparent)]")} aria-label={`${d.name}, ${d.office}. Read biography`}>
         {body}
       </Dialog.Trigger>
       <Dialog.Portal>

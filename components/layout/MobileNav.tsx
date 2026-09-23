@@ -22,7 +22,7 @@ export function MobileNav() {
   return (
     <Dialog.Root open={open} onOpenChange={setOpen}>
       <Dialog.Trigger
-        className="grid size-11 place-items-center rounded-chip text-ink hover:bg-cord-soft lg:hidden"
+        className="grid size-11 place-items-center rounded-chip text-ink hover:bg-cord-soft xl:hidden"
         aria-label="Open menu"
       >
         <Menu className="size-6" strokeWidth={1.5} />

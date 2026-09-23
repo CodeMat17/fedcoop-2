@@ -111,3 +111,87 @@ export const writeDirectors = internalMutation({
     }
   },
 });
+
+/*
+ * One-off: move the legacy `news` articles into `posts`, re-hosting cover images
+ * on Cloudinary and deleting them from Convex storage. Skips slugs already in
+ * `posts`, so it is safe to re-run. Run: npx convex run migrations:newsToPosts
+ */
+
+export const listNews = internalQuery({
+  args: {},
+  handler: (ctx) => ctx.db.query("news").collect(),
+});
+
+function excerptOf(html: string) {
+  const text = html
+    .replace(/<[^>]+>/g, " ")
+    .replace(/&nbsp;/g, " ")
+    .replace(/&amp;/g, "&")
+    .replace(/\s+/g, " ")
+    .trim();
+  if (text.length <= 200) return text;
+  const cut = text.slice(0, 200);
+  return `${cut.slice(0, cut.lastIndexOf(" "))}…`;
+}
+
+export const newsToPosts = internalAction({
+  args: {},
+  handler: async (ctx): Promise<{ slug: string; coverUrl?: string }[]> => {
+    const news: Doc<"news">[] = await ctx.runQuery(internal.migrations.listNews, {});
+    const rows = [];
+    for (const n of news) {
+      const slug = n.slug.replace(/-+$/, "");
+      let coverUrl: string | undefined;
+      if (n.image) {
+        const blob = await ctx.storage.get(n.image);
+        if (blob) coverUrl = await uploadToCloudinary(blob, `fedcoop/news/${slug}`);
+      }
+      rows.push({
+        newsId: n._id,
+        title: n.title.trim(),
+        slug,
+        excerpt: excerptOf(n.body),
+        body: n.body,
+        coverUrl,
+        publishedAt: Math.round(n._creationTime),
+      });
+    }
+    await ctx.runMutation(internal.migrations.writePosts, { rows });
+    await ctx.runAction(internal.revalidate.tags, { tags: ["posts"] });
+    return rows.map((r) => ({ slug: r.slug, coverUrl: r.coverUrl }));
+  },
+});
+
+export const writePosts = internalMutation({
+  args: {
+    rows: v.array(
+      v.object({
+        newsId: v.id("news"),
+        title: v.string(),
+        slug: v.string(),
+        excerpt: v.string(),
+        body: v.string(),
+        coverUrl: v.optional(v.string()),
+        publishedAt: v.number(),
+      }),
+    ),
+  },
+  handler: async (ctx, { rows }) => {
+    for (const { newsId, ...row } of rows) {
+      const existing = await ctx.db
+        .query("posts")
+        .withIndex("by_slug", (q) => q.eq("slug", row.slug))
+        .unique();
+      if (!existing) {
+        await ctx.db.insert("posts", { ...row, coverAlt: row.title, pillars: [], isPublished: true });
+      }
+      // Sever the Convex-hosted image once the Cloudinary copy is recorded.
+      const item = await ctx.db.get(newsId);
+      if (item?.image && row.coverUrl) {
+        await ctx.storage.delete(item.image);
+        await ctx.db.patch(newsId, { image: undefined });
+      }
+    }
+  },
+});

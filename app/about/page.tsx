@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { PageHero, Rich, Section } from "@/components/shared/Page";
+import { CtaBand, PageHero, Rich, Section } from "@/components/shared/Page";
 import { getMilestones, getPages, getPartners } from "@/lib/data";
 import { SITE } from "@/lib/site";
 import { btn, cn } from "@/lib/ui";
@@ -27,11 +27,12 @@ export default async function AboutPage() {
     <>
       <PageHero
         title="About FEDCOOP"
+        eyebrow="The federation"
         crumbs={[{ label: "About", href: "/about" }]}
         standfirst={`${SITE.legalName} is the national umbrella body for staff cooperative societies inside Nigeria's federal Ministries, Departments and Agencies.`}
       />
 
-      <Section id="who" title="Who we are">
+      <Section id="who" eyebrow="Who we are" title="Staff cooperatives, stronger as one federation.">
         {pages.about ? (
           <Rich html={pages.about.body} />
         ) : (
@@ -56,11 +57,12 @@ export default async function AboutPage() {
 
       {mvv.length > 0 && (
         <Section id="mission">
-          <div className={cn("grid gap-10", mvv.length > 1 && "md:grid-cols-2", mvv.length > 2 && "lg:grid-cols-3")}>
+          <p className="eyebrow">Our purpose</p>
+          <div className={cn("mt-10 grid gap-x-12 gap-y-12", mvv.length > 1 && "md:grid-cols-2", mvv.length > 2 && "lg:grid-cols-3")}>
             {mvv.map((p) => (
-              <div key={p!.key}>
-                <h2 className="t-section">{p!.title}</h2>
-                <Rich html={p!.body} className="mt-4 text-ink-muted" />
+              <div key={p!.key} className="border-t border-ink/80 pt-6">
+                <h2 className="t-meta tracking-[0.12em] text-ink-muted uppercase">{p!.title}</h2>
+                <Rich html={p!.body} className="mt-5 text-[clamp(1.125rem,1rem+0.5vw,1.375rem)] leading-[1.45] font-semibold tracking-[-0.015em] text-ink" />
               </div>
             ))}
           </div>
@@ -68,12 +70,12 @@ export default async function AboutPage() {
       )}
 
       {milestones.length > 0 && (
-        <Section id="history" title="History">
+        <Section id="history" eyebrow="Since the beginning" title="History">
           <ol className="relative max-w-3xl">
             <span aria-hidden="true" className="absolute top-2 bottom-2 left-[1.4rem] w-[2px] bg-cord" />
             {milestones.map((m, i) => (
               <li key={m._id} className="relative grid grid-cols-[3rem_1fr] gap-5 pb-10 last:pb-0">
-                <span className="tabular relative z-10 grid size-12 place-items-center rounded-full border-2 border-cord bg-paper font-black text-cord">
+                <span className="tabular relative z-10 grid size-12 place-items-center rounded-full border-2 border-cord bg-paper font-black text-cord shadow-[0_0_0_6px_var(--paper)]">
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <div className="pt-1">
@@ -87,9 +89,9 @@ export default async function AboutPage() {
         </Section>
       )}
 
-      <Section id="governance" title="How the federation is governed">
+      <Section id="governance" eyebrow="Governance" title="How the federation is governed">
         <div className="grid items-start gap-12 lg:grid-cols-2">
-          <figure>
+          <figure className="rounded-card border border-cord-line bg-paper-raise p-6 md:p-10">
             <svg viewBox="0 0 480 380" className="h-auto w-full" role="img" aria-labelledby="gov-title gov-desc">
               <title id="gov-title">FEDCOOP governance structure</title>
               <desc id="gov-desc">
@@ -121,7 +123,7 @@ export default async function AboutPage() {
               <path d="M106 290 C70 290 46 300 46 264" stroke="var(--brass)" strokeWidth="2" fill="none" markerEnd="url(#arrow)" />
             </svg>
           </figure>
-          <div className="max-w-[34rem] space-y-4">
+          <div className="max-w-[34rem] space-y-5 [&_p]:border-l-2 [&_p]:border-cord-line [&_p]:pl-5 [&_strong]:text-ink">
             <p><strong>Member societies</strong> are independent cooperatives. Each keeps its own bye-laws, committee and funds.</p>
             <p><strong>The General Meeting</strong> is the federation&apos;s highest authority. Every member society sends delegates, who approve accounts, set dues and elect the board.</p>
             <p><strong>The Board of Directors</strong> sets direction between meetings and is accountable to the General Meeting.</p>
@@ -131,7 +133,7 @@ export default async function AboutPage() {
       </Section>
 
       {partners.length > 0 && (
-        <Section id="partners" title="Affiliations and partners">
+        <Section id="partners" eyebrow="Partners" title="Affiliations and partners">
           <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
             {partners.map((p) => {
               const logo = (
@@ -153,14 +155,11 @@ export default async function AboutPage() {
         </Section>
       )}
 
-      <section className="section">
-        <div className="shell">
-          <h2 className="t-section">Meet the people elected to lead the federation.</h2>
-          <Link href="/directors" className={cn(btn.primary, "mt-8")}>
-            Board of Directors <ArrowRight className="size-4" strokeWidth={1.5} />
-          </Link>
-        </div>
-      </section>
+      <CtaBand eyebrow="Leadership" title="Meet the people elected to lead the federation.">
+        <Link href="/directors" className={cn(btn.onCord, "min-h-12 px-6")}>
+          Board of Directors <ArrowRight className="size-4" strokeWidth={1.5} />
+        </Link>
+      </CtaBand>
     </>
   );
 }

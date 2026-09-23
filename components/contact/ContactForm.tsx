@@ -12,7 +12,6 @@ import { z } from "zod";
 import { callForm, formError } from "@/lib/convex-client";
 import { ENQUIRY_CATEGORIES, type EnquiryCategory } from "@/lib/site";
 import { Button } from "@/components/ui/button";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -35,7 +34,6 @@ const schema = z
     cooperativeName: z.string().trim().optional(),
     mda: z.string().trim().optional(),
     contactPerson: z.string().trim().optional(),
-    consent: z.literal(true, { errorMap: () => ({ message: "Tick the box to let FEDCOOP use these details to reply" }) }),
   })
   .superRefine((v, ctx) => {
     // Membership-only fields are validated only while they are visible.
@@ -239,32 +237,7 @@ export function ContactForm() {
         <Input id="website" name="website" type="text" tabIndex={-1} autoComplete="off" />
       </div>
 
-      <div>
-        <Label className="mb-0 flex items-start gap-3 font-normal">
-          <Controller
-            control={control}
-            name="consent"
-            render={({ field }) => (
-              <Checkbox
-                ref={field.ref}
-                name={field.name}
-                checked={field.value === true}
-                onCheckedChange={(checked) => field.onChange(checked ? true : undefined)}
-                onBlur={field.onBlur}
-                {...aria("consent")}
-                className="mt-0.5"
-              />
-            )}
-          />
-          <span className="text-[0.95rem]">
-            FEDCOOP may use these details to reply to this enquiry, as described in the{" "}
-            <a href="/privacy" className="font-semibold text-cord underline underline-offset-4">privacy notice</a>.
-          </span>
-        </Label>
-        <p id="consent-error" aria-live="polite" className="mt-1 min-h-5 text-[0.88rem] text-danger">
-          {errors.consent?.message}
-        </p>
-      </div>
+    
 
       {TURNSTILE_KEY && <div className="cf-turnstile" data-sitekey={TURNSTILE_KEY} data-theme="auto" />}
 

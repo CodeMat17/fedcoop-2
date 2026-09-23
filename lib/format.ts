@@ -24,3 +24,12 @@ export const readingTime = (html: string) => {
   const words = html.replace(/<[^>]+>/g, " ").split(/\s+/).filter(Boolean).length;
   return `${Math.max(1, Math.round(words / 220))} min read`;
 };
+
+/** Day and short month for calendar-style date tiles, in WAT. */
+export const fmtDayMonth = (ms: number) => {
+  const parts = new Intl.DateTimeFormat("en-GB", { day: "2-digit", month: "short", timeZone: WAT }).formatToParts(ms);
+  return {
+    day: parts.find((p) => p.type === "day")?.value ?? "",
+    month: parts.find((p) => p.type === "month")?.value ?? "",
+  };
+};

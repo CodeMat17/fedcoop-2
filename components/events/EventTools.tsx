@@ -10,10 +10,11 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export function EventTabs({ upcoming, past }: { upcoming: ReactNode; past: ReactNode }) {
-  const tab = "min-h-11 px-4 font-bold text-ink-muted data-[selected]:text-cord border-b-2 border-transparent data-[selected]:border-cord";
+  const tab =
+    "inline-flex min-h-10 items-center rounded-full px-5 text-[0.93rem] font-semibold text-ink-muted transition-colors hover:text-ink data-[selected]:bg-cord data-[selected]:text-paper data-[selected]:shadow-sm";
   return (
     <Tabs.Root defaultValue="upcoming">
-      <Tabs.List className="mb-8 flex gap-2 border-b border-cord-line">
+      <Tabs.List className="mb-10 inline-flex gap-1 rounded-full border border-cord-line bg-paper-raise p-1">
         <Tabs.Tab value="upcoming" className={tab}>Upcoming</Tabs.Tab>
         <Tabs.Tab value="past" className={tab}>Past</Tabs.Tab>
       </Tabs.List>

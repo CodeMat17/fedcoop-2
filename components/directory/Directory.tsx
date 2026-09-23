@@ -69,13 +69,13 @@ export function Directory({ coops }: { coops: Cooperative[] }) {
     <div>
       <label className="relative block">
         <span className="sr-only">Search member societies</span>
-        <Search className="absolute top-1/2 left-3 size-5 -translate-y-1/2 text-ink-muted" strokeWidth={1.5} aria-hidden="true" />
+        <Search className="absolute top-1/2 left-4 size-5 -translate-y-1/2 text-ink-muted" strokeWidth={1.5} aria-hidden="true" />
         <Input
           type="search"
           value={term}
           onChange={(e) => setTerm(e.target.value)}
-          placeholder="Search member societies"
-          className="pl-10"
+          placeholder="Search by society, acronym or MDA"
+          className="min-h-14 rounded-full bg-paper-raise pl-12 text-[1.02rem] shadow-[0_12px_30px_-24px_rgb(16_26_23/0.4)]"
         />
       </label>
 

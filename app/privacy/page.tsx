@@ -27,7 +27,7 @@ export default async function PrivacyPage() {
             <h2>What we collect</h2>
             <p>When you send an enquiry, register interest in an event or subscribe to updates, we collect the details you enter: your name, email address, phone number, cooperative society, MDA and message.</p>
             <h2>Why we collect it</h2>
-            <p>To reply to your enquiry, plan events, and send updates you asked for. The lawful basis is your consent, given when you tick the consent box or subscribe, in line with the Nigeria Data Protection Act 2023.</p>
+            <p>To reply to your enquiry, plan events, and send updates you asked for. The lawful basis is your consent, given when you send an enquiry or subscribe, in line with the Nigeria Data Protection Act 2023.</p>
             <h2>Who we share it with</h2>
             <p>We do not sell personal data. It is stored with our database provider (Convex) and emails are sent through our email provider (Resend). Both process data on our instructions only.</p>
             <h2>How long we keep it</h2>

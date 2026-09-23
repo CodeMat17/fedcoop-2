@@ -3,11 +3,11 @@ import { cva, type VariantProps } from "class-variance-authority"
 import { cn } from "cn"
 
 const buttonVariants = cva(
-  "group/button inline-flex shrink-0 items-center justify-center gap-2 rounded-chip border border-transparent bg-clip-padding font-bold leading-tight whitespace-nowrap transition-colors duration-200 outline-none select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brass disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+  "group/button inline-flex shrink-0 items-center justify-center gap-2 rounded-chip border border-transparent bg-clip-padding font-semibold leading-tight tracking-[-0.005em] whitespace-nowrap transition-colors duration-200 outline-none select-none focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brass disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
   {
     variants: {
       variant: {
-        default: "bg-cord text-paper hover:bg-brass hover:text-ink",
+        default: "bg-cord text-paper shadow-[inset_0_1px_0_rgb(255_255_255/0.14),0_10px_24px_-12px_color-mix(in_oklab,var(--cord)_70%,transparent)] hover:bg-[color-mix(in_oklab,var(--cord)_84%,black)]",
         secondary: "border-cord-line bg-paper-raise text-ink hover:border-cord",
         outline: "border-cord-line text-ink hover:border-cord aria-pressed:border-cord aria-pressed:bg-cord aria-pressed:text-paper",
         ghost: "text-ink hover:bg-cord-soft",

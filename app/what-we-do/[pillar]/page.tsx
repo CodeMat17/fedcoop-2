@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { Check, FileDown } from "lucide-react";
+import { ArrowRight, Check, FileDown } from "lucide-react";
 import { SelfCheck } from "@/components/pillars/SelfCheck";
 import { EventCard, PostCard } from "@/components/shared/Cards";
-import { PageHero, Section } from "@/components/shared/Page";
+import { CtaBand, PageHero, Section } from "@/components/shared/Page";
 import { PillarIcon } from "@/components/shared/PillarIcon";
 import { getEvents, getPosts, getResources } from "@/lib/data";
 import { fmtBytes } from "@/lib/format";
 import { PILLARS, pillarBySlug } from "@/lib/site";
-import { btn, cn, link } from "@/lib/ui";
+import { btn, card, cn } from "@/lib/ui";
 
 export const revalidate = 3600;
 export const dynamicParams = false;
@@ -37,34 +37,33 @@ export default async function PillarPage({ params }: PageProps<"/what-we-do/[pil
 
   return (
     <>
-      <PageHero title={pillar.name} crumbs={[{ label: "What We Do", href: "/what-we-do" }, { label: pillar.name, href: `/what-we-do/${pillar.slug}` }]} standfirst={pillar.standfirst} />
+      <PageHero title={pillar.name} crumbs={[{ label: "What We Do", href: "/what-we-do" }, { label: pillar.name, href: `/what-we-do/${pillar.slug}` }]} standfirst={pillar.standfirst}>
+        <span aria-hidden="true" className="absolute top-1/2 right-10 hidden size-40 -translate-y-1/2 place-items-center rounded-full border border-cord-line bg-paper-raise/70 text-cord shadow-[0_30px_60px_-30px_color-mix(in_oklab,var(--cord)_55%,transparent)] backdrop-blur lg:grid xl:size-48">
+          <span className="absolute inset-3 rounded-full border border-dashed border-brass/40" />
+          <PillarIcon slug={pillar.slug} className="size-14 xl:size-16" />
+        </span>
+      </PageHero>
 
-      <div aria-hidden="true" className="relative h-48 w-full overflow-hidden border-y border-cord-line bg-cord-soft md:h-72">
-        <svg viewBox="0 0 1440 300" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 h-full w-full" fill="none">
-          {Array.from({ length: 6 }, (_, i) => (
-            <path key={i} d={`M-20 ${90 + i * 22} C 360 ${20 + i * 30}, 720 ${260 - i * 25}, 1460 ${120 + i * 12}`} stroke={i === 5 ? "var(--brass)" : "var(--cord)"} strokeOpacity={0.2 + i * 0.1} strokeWidth="2" />
-          ))}
-        </svg>
-        <div className="shell relative grid h-full items-center">
-          <PillarIcon slug={pillar.slug} className="size-16 text-cord md:size-24" />
-        </div>
-      </div>
 
-      <Section id="practice" title="What this means in practice">
-        <ul className="grid max-w-4xl gap-x-10 gap-y-4 md:grid-cols-2">
+      <Section id="practice" eyebrow="In practice" title="What this means in practice">
+        <ul className="grid gap-px overflow-hidden rounded-card border border-cord-line bg-cord-line md:grid-cols-2">
           {pillar.practice.map((item) => (
-            <li key={item} className="flex gap-3">
-              <Check className="mt-1 size-5 shrink-0 text-cord" strokeWidth={1.5} aria-hidden="true" />
-              {item}
+            <li key={item} className="flex gap-4 bg-paper p-6 md:p-8">
+              <span aria-hidden="true" className="grid size-8 shrink-0 place-items-center rounded-full bg-cord-soft text-cord">
+                <Check className="size-4" strokeWidth={2} />
+              </span>
+              <span className="pt-0.5 text-[1.02rem] leading-relaxed">{item}</span>
             </li>
           ))}
         </ul>
       </Section>
 
-      <Section id="how" title="How it works">
-        <div className="max-w-[34rem] space-y-4">
+      <Section id="how" eyebrow="The mechanics" title="How it works">
+        <div className="grid max-w-5xl gap-8 md:grid-cols-2 md:gap-12">
           {pillar.how.map((para) => (
-            <p key={para}>{para}</p>
+            <p key={para} className="border-t border-ink/80 pt-6 text-[1.05rem] leading-relaxed">
+              {para}
+            </p>
           ))}
         </div>
       </Section>
@@ -78,7 +77,7 @@ export default async function PillarPage({ params }: PageProps<"/what-we-do/[pil
       )}
 
       {hasEvidence && (
-        <Section id="evidence" title="In the federation">
+        <Section id="evidence" eyebrow="Evidence" title="In the federation">
           <div className="space-y-12">
             {relPosts.length > 0 && (
               <div>
@@ -117,20 +116,26 @@ export default async function PillarPage({ params }: PageProps<"/what-we-do/[pil
         </Section>
       )}
 
-      <section className="relative z-10 bg-cord py-16 text-paper md:py-24">
-        <div className="shell flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-          <h2 className="t-section max-w-[24ch]">{pillar.line}</h2>
-          <Link href={ctaHref} className={cn(btn.onCord, "self-start md:self-auto")}>
-            {pillar.cta.label}
-          </Link>
-        </div>
-      </section>
+      <CtaBand eyebrow={pillar.name} title={pillar.line}>
+        <Link href={ctaHref} className={cn(btn.onCord, "min-h-12 px-6")}>
+          {pillar.cta.label}
+          <ArrowRight className="size-4" strokeWidth={1.5} />
+        </Link>
+      </CtaBand>
 
-      <nav aria-label="Other pillars" className="shell py-12">
-        <ul className="flex flex-wrap gap-x-6 gap-y-2">
+      <nav aria-label="Other pillars" className="shell py-16 md:py-20">
+        <p className="eyebrow mb-6">Other pillars</p>
+        <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
           {PILLARS.filter((p) => p.slug !== pillar.slug).map((p) => (
             <li key={p.slug}>
-              <Link href={`/what-we-do/${p.slug}`} className={cn(link, "inline-flex min-h-11 items-center")}>{p.name}</Link>
+              <Link
+                href={`/what-we-do/${p.slug}`}
+                className={cn(card, "group flex min-h-16 items-center gap-3 px-5 py-4 hover:border-cord/50")}
+              >
+                <PillarIcon slug={p.slug} className="size-5 shrink-0 text-cord" />
+                <span className="font-semibold group-hover:text-cord">{p.name}</span>
+                <ArrowRight className="ml-auto size-4 text-ink-muted transition-transform group-hover:translate-x-1 group-hover:text-cord" strokeWidth={1.5} />
+              </Link>
             </li>
           ))}
         </ul>

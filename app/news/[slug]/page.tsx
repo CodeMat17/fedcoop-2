@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { PostCard } from "@/components/shared/Cards";
+import { CoverHero } from "@/components/shared/CoverHero";
 import { JsonLd } from "@/components/shared/JsonLd";
 import { PageHero, Rich } from "@/components/shared/Page";
 import { ShareRow } from "@/components/shared/ShareRow";
@@ -48,23 +48,20 @@ export default async function Article({ params }: PageProps<"/news/[slug]">) {
         }}
       />
       <PageHero title={post.title} crumbs={[{ label: "News", href: "/news" }, { label: post.title, href: `/news/${post.slug}` }]}>
-        <p className="t-meta mt-6 text-ink-muted">
+        <p className="t-meta mt-6 tracking-[0.06em] text-ink-muted uppercase">
           <time dateTime={new Date(post.publishedAt).toISOString()}>{fmtDate(post.publishedAt)}</time>
           {post.author && ` · ${post.author}`} · {readingTime(post.body)}
           {post.pillars.length > 0 && ` · ${post.pillars.map((p) => pillarBySlug(p)?.name ?? p).join(", ")}`}
         </p>
       </PageHero>
-      {post.coverUrl && (
-        <div className="relative mb-14 aspect-video max-h-[70svh] w-full bg-cord-soft">
-          <Image src={post.coverUrl} alt={post.coverAlt ?? ""} fill priority sizes="100vw" className="object-cover" />
-        </div>
-      )}
+      {post.coverUrl && <CoverHero src={post.coverUrl} alt={post.coverAlt ?? ""} />}
       <div className="shell pb-24">
         <Rich html={post.body} />
         <ShareRow url={url} title={post.title} className="mt-12" />
         {related.length > 0 && (
           <section aria-labelledby="related-h" className="mt-20 border-t border-cord-line pt-14">
-            <h2 id="related-h" className="t-section mb-6">Related articles</h2>
+            <p className="eyebrow mb-4">Keep reading</p>
+            <h2 id="related-h" className="t-section mb-8">Related articles</h2>
             <ul className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {related.map((p) => (
                 <li key={p._id}><PostCard post={p} /></li>

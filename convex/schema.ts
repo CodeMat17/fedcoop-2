@@ -2,6 +2,18 @@ import { defineSchema, defineTable } from "convex/server";
 import { v } from "convex/values";
 
 export default defineSchema({
+  // Clerk accounts that have opened /admin. `role` is the only thing that
+  // grants access; absent means signed in but not authorised (convex/access.ts).
+  users: defineTable({
+    tokenIdentifier: v.string(),
+    clerkId: v.string(),
+    email: v.optional(v.string()),
+    name: v.optional(v.string()),
+    imageUrl: v.optional(v.string()),
+    role: v.optional(v.literal("admin")),
+    lastSeenAt: v.number(),
+  }).index("by_token", ["tokenIdentifier"]),
+
   cooperatives: defineTable({
     name: v.string(),
     slug: v.string(),
@@ -72,6 +84,16 @@ export default defineSchema({
     position: v.string(),
     description: v.optional(v.string()),
     profile: v.optional(v.string()),
+    image: v.optional(v.id("_storage")),
+  }),
+
+  // Legacy articles from the previous site; migrated into `posts` by
+  // migrations:newsToPosts.
+  news: defineTable({
+    title: v.string(),
+    slug: v.string(),
+    body: v.string(),
+    featured: v.optional(v.boolean()),
     image: v.optional(v.id("_storage")),
   }),
 

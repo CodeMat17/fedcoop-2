@@ -1,6 +1,7 @@
 import { action, internalAction, internalMutation, internalQuery } from "./_generated/server";
 import { internal } from "./_generated/api";
 import { v } from "convex/values";
+import { enquiryConfirmation, enquiryNotification } from "./emailTemplates";
 
 /*
  * Public form intake: contact enquiries, event RSVPs and newsletter sign-ups.
@@ -41,15 +42,24 @@ async function passesGuard(args: { website: string; startedAt: number; turnstile
   return data.success;
 }
 
-async function sendEmail(to: string, subject: string, text: string) {
+async function sendEmail(
+  to: string,
+  subject: string,
+  text: string,
+  opts: { html?: string; replyTo?: string } = {},
+) {
   const key = process.env.RESEND_API_KEY;
-  const from = process.env.RESEND_FROM ?? "FEDCOOP <no-reply@fedcoop.ng>";
-  if (!key) return;
-  await fetch("https://api.resend.com/emails", {
+  const from = process.env.RESEND_FROM ?? "FEDCOOP <no-reply@fedcoop.org>";
+  if (!key) {
+    console.warn(`RESEND_API_KEY is not set; email "${subject}" to ${to} was not sent`);
+    return;
+  }
+  const res = await fetch("https://api.resend.com/emails", {
     method: "POST",
     headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
-    body: JSON.stringify({ from, to, subject, text }),
+    body: JSON.stringify({ from, to, subject, text, html: opts.html, reply_to: opts.replyTo }),
   });
+  if (!res.ok) console.error(`Resend rejected "${subject}" to ${to}: ${res.status} ${await res.text()}`);
 }
 
 /* ---------------------------------- enquiries ---------------------------------- */
@@ -76,12 +86,7 @@ export const submitEnquiry = action({
     if (recent >= MAX_PER_WINDOW) return { ok: false, reason: "rate" };
 
     await ctx.runMutation(internal.forms.insertEnquiry, enquiry);
-    await ctx.scheduler.runAfter(0, internal.forms.notifyEnquiry, {
-      email: enquiry.email,
-      fullName: enquiry.fullName,
-      category: enquiry.category,
-      message: enquiry.message,
-    });
+    await ctx.scheduler.runAfter(0, internal.forms.notifyEnquiry, enquiry);
     return { ok: true };
   },
 });
@@ -115,19 +120,24 @@ export const insertEnquiry = internalMutation({
 });
 
 export const notifyEnquiry = internalAction({
-  args: { email: v.string(), fullName: v.string(), category: v.string(), message: v.string() },
+  args: {
+    category,
+    fullName: v.string(),
+    email: v.string(),
+    phone: v.optional(v.string()),
+    subject: v.optional(v.string()),
+    message: v.string(),
+    cooperativeName: v.optional(v.string()),
+    mda: v.optional(v.string()),
+    contactPerson: v.optional(v.string()),
+  },
   handler: async (_ctx, a) => {
-    const inbox = process.env.ENQUIRY_INBOX ?? "info@fedcoop.ng";
-    await sendEmail(
-      inbox,
-      `New ${a.category} enquiry from ${a.fullName}`,
-      `${a.fullName} <${a.email}>\n\n${a.message}`,
-    );
-    await sendEmail(
-      a.email,
-      "Enquiry sent to FEDCOOP",
-      `Dear ${a.fullName},\n\nFEDCOOP has received your enquiry and will respond within two working days.\n\nFEDCOOP\nFederal Secretariat Complex, Phase 1, Abuja`,
-    );
+    const inbox = "email@fedcoop.org";
+    const notice = enquiryNotification(a);
+    // Reply-To is the sender, so hitting Reply in the inbox answers them directly.
+    await sendEmail(inbox, notice.subject, notice.text, { html: notice.html, replyTo: a.email });
+    const confirm = enquiryConfirmation(a);
+    await sendEmail(a.email, confirm.subject, confirm.text, { html: confirm.html, replyTo: inbox });
   },
 });
 

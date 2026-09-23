@@ -12,7 +12,7 @@ export const btn = {
 };
 
 export const card =
-  "rounded-card border border-cord-line bg-paper-raise transition-colors duration-200";
+  "rounded-card border border-cord-line bg-paper-raise transition-[border-color,box-shadow,transform,background-color] duration-300 ease-out";
 
 export const link = "font-semibold text-cord underline-offset-4 hover:underline";
 

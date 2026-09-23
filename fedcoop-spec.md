@@ -40,7 +40,7 @@ Phase 1, Abuja, FCT
 Nigeria
 
 +234 (0) 916 248 4000
-info@fedcoop.ng
+email@fedcoop.org
 ```
 
 **Social handles (footer, contact page, article share):**
@@ -1041,7 +1041,7 @@ Build against placeholders, but track these:
 - [ ] Event photography for the gallery, in both orientations, with captions and dates
 - [ ] Testimonial quotes with attribution and consent
 - [ ] Downloadable resources (bye-law templates, reports, checklists)
-- [ ] Confirmed public email — the site currently shows `info@fedcoop.ng`; confirm before launch
+- [x] Confirmed public email — `email@fedcoop.org`
 - [ ] Privacy policy and terms content, reviewed by FEDCOOP
 
 ---
