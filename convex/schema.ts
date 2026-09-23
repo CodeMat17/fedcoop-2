@@ -30,6 +30,8 @@ export default defineSchema({
     contactPhone: v.optional(v.string()),
     website: v.optional(v.string()),
     isVerified: v.boolean(),
+    // Registered with FEDCOOP. Absent means not registered (the default).
+    isRegistered: v.optional(v.boolean()),
     isPublished: v.boolean(),
     isTestData: v.optional(v.boolean()),
     order: v.optional(v.number()),

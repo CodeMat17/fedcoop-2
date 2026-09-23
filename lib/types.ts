@@ -27,6 +27,8 @@ export type Cooperative = {
   contactPhone?: string;
   website?: string;
   isVerified: boolean;
+  /** Registered with FEDCOOP; absent means not registered. */
+  isRegistered?: boolean;
 };
 
 export type StateStat = {

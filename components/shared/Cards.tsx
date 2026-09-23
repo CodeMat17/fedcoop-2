@@ -5,6 +5,7 @@ import type { Cooperative, EventItem, Post } from "@/lib/types";
 import { fmtDate, fmtDateShort, fmtTime } from "@/lib/format";
 import { stateByCode } from "@/lib/states";
 import { card, chip, cn } from "@/lib/ui";
+import { RegistrationBadge } from "./RegistrationBadge";
 
 function Cover({ src, alt }: { src?: string; alt: string }) {
   return (
@@ -88,15 +89,24 @@ function Monogram({ coop, size = 48 }: { coop: Pick<Cooperative, "acronym" | "na
 export function CoopCard({ coop }: { coop: Cooperative }) {
   const state = stateByCode(coop.stateCode);
   return (
-    <article className={cn(card, "group relative flex h-full gap-4 p-5 hover:border-cord")}>
-      <Monogram coop={coop} />
+    <article
+      className={cn(
+        card,
+        "group relative flex h-full gap-4 p-5",
+        coop.isRegistered ? "hover:border-cord" : "border-dashed bg-paper hover:border-ink-muted/40 hover:bg-paper-raise",
+      )}
+    >
+      <div className={cn("transition-opacity duration-200", !coop.isRegistered && "opacity-55 group-hover:opacity-90")}>
+        <Monogram coop={coop} />
+      </div>
       <div className="min-w-0 flex-1">
-        <h3 className="t-card">
+        <h3 className={cn("t-card", !coop.isRegistered && "text-ink-muted/80")}>
           <Link href={`/cooperatives/${coop.slug}`} className="after:absolute after:inset-0 group-hover:text-cord">
             {coop.name}
           </Link>
         </h3>
         <div className="mt-2 flex flex-wrap gap-1.5">
+          <RegistrationBadge registered={coop.isRegistered} />
           {coop.acronym && <span className={chip}>{coop.acronym}</span>}
           {coop.isVerified && (
             <span className={cn(chip, "gap-1 border-cord/40 text-cord")}>

@@ -1,3 +1,5 @@
+import { v } from "convex/values";
+import { internal } from "./_generated/api";
 import type { Id } from "./_generated/dataModel";
 import { internalMutation, type MutationCtx } from "./_generated/server";
 import { REGISTER_MDAS, slugify, societyName } from "./register";
@@ -10,6 +12,8 @@ import { STATE_ROWS } from "./stateRows";
  *   npx convex run seed:testData     — inserts clearly-labelled [TEST] cooperatives.
  *   npx convex run seed:clearTestData
  *   npx convex run seed:importRegister — inserts the real member register (convex/register.ts).
+ *   npx convex run seed:setRegistered '{"slug":"...","registered":true}' — marks a society (un)registered.
+ *   npx convex run seed:setPage '{"key":"mission","title":"...","body":"<p>...</p>"}' — upserts a CMS page.
  *
  * testData never writes stateStats or siteStats, so no figure can reach the public
  * site without someone ticking "verified" on a real number.
@@ -160,5 +164,32 @@ export const clearTestData = internalMutation({
   handler: async (ctx) => {
     const rows = await ctx.db.query("cooperatives").collect();
     for (const r of rows) if (r.isTestData) await ctx.db.delete(r._id);
+  },
+});
+
+export const setRegistered = internalMutation({
+  args: { slug: v.string(), registered: v.boolean() },
+  handler: async (ctx, { slug, registered }) => {
+    const row = await ctx.db
+      .query("cooperatives")
+      .withIndex("by_slug", (q) => q.eq("slug", slug))
+      .unique();
+    if (!row) throw new Error(`No cooperative with slug "${slug}"`);
+    await ctx.db.patch(row._id, { isRegistered: registered });
+    await ctx.scheduler.runAfter(0, internal.revalidate.tags, { tags: ["cooperatives"] });
+  },
+});
+
+export const setPage = internalMutation({
+  args: { key: v.string(), title: v.string(), body: v.string() },
+  handler: async (ctx, { key, title, body }) => {
+    const row = await ctx.db
+      .query("pages")
+      .withIndex("by_key", (q) => q.eq("key", key))
+      .unique();
+    const doc = { key, title, body, updatedAt: Date.now() };
+    if (row) await ctx.db.patch(row._id, doc);
+    else await ctx.db.insert("pages", doc);
+    await ctx.scheduler.runAfter(0, internal.revalidate.tags, { tags: ["pages"] });
   },
 });
