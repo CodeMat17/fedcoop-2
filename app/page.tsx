@@ -65,10 +65,11 @@ export default async function Home() {
 
   return (
     <>
-      <ScrollCord braided />
+      <h1 className='text-center py-32 font-bold text-5xl'>The FEDCOOP website is undergoing a minor update. Please check back soon.</h1>
+      {/* <ScrollCord braided /> */}
 
       {/* 8.1 Hero */}
-      <section className='relative isolate flex min-h-[88svh] items-center overflow-hidden pt-10 pb-20 md:min-h-[92svh] md:pb-28'>
+      {/* <section className='relative isolate flex min-h-[88svh] items-center overflow-hidden pt-10 pb-20 md:min-h-[92svh] md:pb-28'>
         <div aria-hidden='true' className='hero-bg absolute inset-0 -z-10' />
         <div className='shell relative grid items-center gap-14 lg:grid-cols-[1.35fr_0.65fr] lg:gap-12'>
           <div>
@@ -109,10 +110,10 @@ export default async function Home() {
             <Seal />
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* 8.3 Mission and vision — hidden entirely when empty */}
-      {(pages.mission || pages.vision) && (
+      {/* {(pages.mission || pages.vision) && (
         <section id='mission' className='section'>
           <div className='shell relative'>
             <CordNode />
@@ -133,10 +134,10 @@ export default async function Home() {
             </div>
           </div>
         </section>
-      )}
+      )} */}
 
       {/* 8.4 Six pillars */}
-      <section id='pillars' className='section'>
+      {/* <section id='pillars' className='section'>
         <div className='shell relative'>
           <CordNode />
           <div className='grid gap-8 lg:grid-cols-12 lg:items-end'>
@@ -183,10 +184,10 @@ export default async function Home() {
             ))}
           </ul>
         </div>
-      </section>
+      </section> */}
 
       {/* 8.5 National reach — a dark band for rhythm */}
-      <section id='reach' className='dark below-fold relative z-10 overflow-hidden bg-paper py-20 text-ink md:py-32'>
+      {/* <section id='reach' className='dark below-fold relative z-10 overflow-hidden bg-paper py-20 text-ink md:py-32'>
         <div aria-hidden='true' className='guilloche absolute inset-0 opacity-[0.035] [mask-image:radial-gradient(70%_70%_at_75%_50%,#000,transparent)]' />
         <div
           aria-hidden='true'
@@ -213,12 +214,12 @@ export default async function Home() {
             <LazyNetworkMap {...network} />
           </Reveal>
         </div>
-      </section>
+      </section> */}
 
       {/* 8.6 Impact numbers */}
 
       {/* 8.7 News + events */}
-      <section id='latest' className='section below-fold border-t-0!'>
+      {/* <section id='latest' className='section below-fold border-t-0!'>
         <div className='shell relative grid gap-16 xl:grid-cols-[3fr_2fr]'>
           <CordNode />
           <div>
@@ -272,10 +273,10 @@ export default async function Home() {
             )}
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* 8.8 Testimonials */}
-      {testimonials.length > 0 && (
+      {/* {testimonials.length > 0 && (
         <section id='voices' className='section below-fold py-20! md:py-24!'>
           <div className='shell relative'>
             <CordNode />
@@ -285,15 +286,15 @@ export default async function Home() {
             <Testimonials items={testimonials} />
           </div>
         </section>
-      )}
+      )} */}
 
       {/* 8.9 Closing CTA */}
-      <CtaBand eyebrow="Membership" title="Bring your cooperative into the federation.">
+      {/* <CtaBand eyebrow="Membership" title="Bring your cooperative into the federation.">
         <Link href={MEMBERSHIP_CTA.href} className={cn(btn.onCord, "min-h-12 px-6")}>
           {MEMBERSHIP_CTA.label}
           <ArrowRight className="size-4" strokeWidth={1.5} />
         </Link>
-      </CtaBand>
+      </CtaBand> */}
     </>
   );
 }
