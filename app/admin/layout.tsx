@@ -12,6 +12,10 @@ export default function AdminLayout({ children }: LayoutProps<"/admin">) {
   return (
     <ClerkProvider
       afterSignOutUrl="/"
+      signInUrl="/admin/sign-in"
+      signUpUrl="/admin/sign-up"
+      signInFallbackRedirectUrl="/admin"
+      signUpFallbackRedirectUrl="/admin"
       appearance={{
         variables: {
           colorPrimary: "var(--cord)",

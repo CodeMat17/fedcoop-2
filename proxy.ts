@@ -10,9 +10,16 @@ import { NextResponse, type NextFetchEvent, type NextRequest } from "next/server
 
 const isAuthPage = createRouteMatcher(["/admin/sign-in(.*)", "/admin/sign-up(.*)", "/admin/sign-out"]);
 
-const clerk = clerkMiddleware(async (auth, request) => {
-  if (!isAuthPage(request)) await auth.protect();
-});
+/* Set here, not only via NEXT_PUBLIC_CLERK_SIGN_IN_URL: if that env var is missing, Clerk falls back to /sign-in (a 404). */
+const SIGN_IN = "/admin/sign-in";
+const SIGN_UP = "/admin/sign-up";
+
+const clerk = clerkMiddleware(
+  async (auth, request) => {
+    if (!isAuthPage(request)) await auth.protect();
+  },
+  { signInUrl: SIGN_IN, signUpUrl: SIGN_UP },
+);
 
 /** The Clerk Frontend API host is encoded in the publishable key: pk_<env>_<base64(host$)>. */
 function clerkOrigin() {
