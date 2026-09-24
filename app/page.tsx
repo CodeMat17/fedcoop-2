@@ -65,7 +65,7 @@ export default async function Home() {
 
   return (
     <>
-      <h1 className='text-center py-32 font-bold text-5xl'>The FEDCOOP website is undergoing a minor update. Please check back soon.</h1>
+      <h1 className='text-center px-8 py-32 font-bold text-5xl'>The FEDCOOP website is undergoing a minor update. Please check back soon.</h1>
       {/* <ScrollCord braided /> */}
 
       {/* 8.1 Hero */}
