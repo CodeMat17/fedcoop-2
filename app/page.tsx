@@ -140,7 +140,7 @@ export default async function Home() {
             <div className='lg:col-span-7'>
               <p className='eyebrow'>What we do</p>
               <h2 className='t-section mt-5 max-w-[18ch]'>
-                Six pillars hold the federation together..
+                Six pillars hold the federation together.
               </h2>
             </div>
             <div className='lg:col-span-5'>
