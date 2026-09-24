@@ -122,7 +122,7 @@ export function Footer() {
               </Link>
             </li>
             <li>
-              <Link href="/admin" prefetch={false} className="inline-flex min-h-11 items-center opacity-60 transition-colors hover:text-ink">
+              <Link href="/admin" prefetch={false} className="inline-flex min-h-11 items-center transition-colors hover:text-ink">
                 Admin
               </Link>
             </li>

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
-import { Reveal } from "@/components/motion/primitives";
+import { Reveal } from "@/components/motion/reveal";
 import { CtaBand, PageHero } from "@/components/shared/Page";
 import { PillarIcon } from "@/components/shared/PillarIcon";
 import { MEMBERSHIP_CTA, PILLARS } from "@/lib/site";

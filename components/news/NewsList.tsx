@@ -59,9 +59,9 @@ export function NewsList({ posts }: { posts: Post[] }) {
           </SelectContent>
         </Select>
       </div>
-      <p aria-live="polite" className="mt-6 font-bold">
+      <h2 aria-live="polite" className="mt-6 font-bold">
         {shown.length} {shown.length === 1 ? "article" : "articles"}
-      </p>
+      </h2>
       {shown.length ? (
         <ul className="mt-6 grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
           {shown.map((p) => (

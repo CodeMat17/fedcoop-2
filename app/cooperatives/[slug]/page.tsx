@@ -125,7 +125,7 @@ export default async function CoopProfile({ params }: PageProps<"/cooperatives/[
                 </a>
               </span>
             ) : (
-              <span>This society does not have a website yet.</span>
+              <span>This society does not have a website yet. Contact 08063856120 to have a premium website and loan application for your cooperative.</span>
             )}
           </p>
         </section>

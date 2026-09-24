@@ -1,9 +1,12 @@
 "use client";
 
 import { ThemeProvider } from "next-themes";
-import { Toaster } from "sonner";
+import dynamic from "next/dynamic";
 import type { ReactNode } from "react";
 import { MotionProvider } from "@/components/motion/MotionProvider";
+
+/* Toasts only follow a form submit, so sonner loads after hydration instead of with the page. */
+const Toaster = dynamic(() => import("sonner").then((m) => m.Toaster), { ssr: false });
 
 export function Providers({ children }: { children: ReactNode }) {
   return (

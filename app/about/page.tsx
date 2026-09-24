@@ -79,7 +79,7 @@ export default async function AboutPage() {
                   {String(i + 1).padStart(2, "0")}
                 </span>
                 <div className="pt-1">
-                  <p className="t-meta tabular text-brass">{m.year}</p>
+                  <p className="t-meta tabular text-brass-ink">{m.year}</p>
                   <h3 className="t-card mt-1">{m.title}</h3>
                   <p className="mt-2 text-ink-muted">{m.body}</p>
                 </div>

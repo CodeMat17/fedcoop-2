@@ -1,8 +1,9 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowRight, ArrowUpRight } from "lucide-react";
 import { CordNode, ScrollCord } from "@/components/cord/Cord";
-import { Magnetic, Reveal } from "@/components/motion/primitives";
-import { NetworkMap } from "@/components/home/NetworkMap";
+import { Magnetic, Reveal } from "@/components/motion/reveal";
+import { LazyNetworkMap } from "@/components/home/LazyNetworkMap";
 import { Seal } from "@/components/home/Seal";
 import { projectNetwork } from "@/lib/geo";
 import { Testimonials } from "@/components/home/Testimonials";
@@ -23,6 +24,8 @@ import { MEMBERSHIP_CTA, PILLARS } from "@/lib/site";
 import { btn, cn } from "@/lib/ui";
 
 export const revalidate = 3600;
+
+export const metadata: Metadata = { alternates: { canonical: "/" } };
 
 const IMPACT = [
   { key: "memberSocieties", label: "member societies", suffix: "+" },
@@ -69,25 +72,25 @@ export default async function Home() {
         <div aria-hidden='true' className='hero-bg absolute inset-0 -z-10' />
         <div className='shell relative grid items-center gap-14 lg:grid-cols-[1.35fr_0.65fr] lg:gap-12'>
           <div>
-            <Reveal>
+            <div className='rise'>
               <p className='eyebrow'>Staff cooperatives of Nigeria&apos;s federal MDAs</p>
-            </Reveal>
-            <Reveal delay={0.08}>
+            </div>
+            <div className='rise' style={{ animationDelay: '80ms' }}>
               <h1 className='mt-7 text-[clamp(2.375rem,1.3rem+3.4vw,4rem)] leading-[1.04] font-black tracking-[-0.04em]'>
                 <span className='block'>One Federation.</span>
                 <span className='block text-cord'>Hundreds of Cooperatives.</span>
                 <span className='block'>One Stronger Future.</span>
               </h1>
-            </Reveal>
-            <Reveal delay={0.16}>
+            </div>
+            <div className='rise' style={{ animationDelay: '160ms' }}>
               <p className='t-lead mt-8 max-w-[48ch] text-ink-muted'>
                 FEDCOOP is the unifying umbrella body for staff cooperative
                 societies across Nigeria&apos;s federal MDAs, bringing savings,
                 credit and welfare initiatives together to create greater
                 collective impact.
               </p>
-            </Reveal>
-            <Reveal delay={0.24}>
+            </div>
+            <div className='rise' style={{ animationDelay: '240ms' }}>
               <div className='mt-10 flex flex-wrap items-center gap-x-8 gap-y-4'>
                 <Magnetic>
                   <Link href='/cooperatives' className={cn(btn.primary, "min-h-12 px-6")}>
@@ -99,12 +102,12 @@ export default async function Home() {
                   <ArrowRight className='size-4 transition-transform group-hover:translate-x-1' strokeWidth={1.5} />
                 </Link>
               </div>
-            </Reveal>
+            </div>
          
           </div>
-          <Reveal delay={0.15} className='hidden w-full max-w-[27rem] justify-self-end lg:block'>
+          <div className='rise hidden w-full max-w-[27rem] justify-self-end lg:block' style={{ animationDelay: '150ms' }}>
             <Seal />
-          </Reveal>
+          </div>
         </div>
       </section>
 
@@ -207,7 +210,7 @@ export default async function Home() {
             </Link>
           </div>
           <Reveal className='h-80 sm:h-105 lg:col-span-7 lg:h-130'>
-            <NetworkMap {...network} />
+            <LazyNetworkMap {...network} />
           </Reveal>
         </div>
       </section>

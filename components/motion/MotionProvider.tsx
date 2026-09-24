@@ -1,26 +1,33 @@
 "use client";
 
-import { createContext, useContext, type ReactNode } from "react";
-import { LazyMotion, domAnimation, useScroll, useSpring, useReducedMotion, type MotionValue } from "framer-motion";
+import { useEffect, type ReactNode } from "react";
 
-type ScrollCtx = { progress: MotionValue<number>; drawn: MotionValue<number>; reduced: boolean };
-
-const Ctx = createContext<ScrollCtx | null>(null);
-
-/** One useScroll for the whole app, published through context (§6.2). */
+/**
+ * One scroll listener for the whole app (§6.2). It publishes page progress (0–1) as the
+ * `--page-progress` custom property on <html>, which the cords read in CSS — no animation
+ * library on the critical path.
+ */
 export function MotionProvider({ children }: { children: ReactNode }) {
-  const { scrollYProgress } = useScroll();
-  const drawn = useSpring(scrollYProgress, { stiffness: 90, damping: 24, restDelta: 0.001 });
-  const reduced = Boolean(useReducedMotion());
-  return (
-    <LazyMotion features={domAnimation} strict>
-      <Ctx.Provider value={{ progress: scrollYProgress, drawn, reduced }}>{children}</Ctx.Provider>
-    </LazyMotion>
-  );
-}
+  useEffect(() => {
+    const root = document.documentElement;
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      const max = root.scrollHeight - window.innerHeight;
+      root.style.setProperty("--page-progress", String(max > 0 ? Math.min(1, window.scrollY / max) : 0));
+    };
+    const schedule = () => {
+      frame ||= requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", schedule, { passive: true });
+    window.addEventListener("resize", schedule, { passive: true });
+    return () => {
+      window.removeEventListener("scroll", schedule);
+      window.removeEventListener("resize", schedule);
+      cancelAnimationFrame(frame);
+    };
+  }, []);
 
-export function usePageScroll(): ScrollCtx {
-  const ctx = useContext(Ctx);
-  if (!ctx) throw new Error("usePageScroll must be used inside MotionProvider");
-  return ctx;
+  return children;
 }

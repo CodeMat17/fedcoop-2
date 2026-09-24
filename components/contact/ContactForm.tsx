@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AnimatePresence, m, useReducedMotion } from "framer-motion";
+import { AnimatePresence, LazyMotion, domAnimation, m, useReducedMotion } from "framer-motion";
 import { CheckCircle2 } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import Script from "next/script";
@@ -184,33 +184,35 @@ export function ContactForm() {
         />
       </Field>
 
-      <AnimatePresence initial={false}>
-        {isMembership && (
-          <m.fieldset
-            key="membership"
-            initial={reduced ? false : { height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
-            exit={reduced ? { opacity: 0 } : { height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-            className="overflow-hidden"
-          >
-            <div className="mb-4 rounded-card border border-cord-line bg-cord-soft/60 p-5">
-              <legend className="t-card mb-4 float-left w-full">About your cooperative society</legend>
-              <div className="clear-both space-y-2">
-                <Field id="cooperativeName" text="Cooperative society name" error={errors.cooperativeName}>
-                  <Input id="cooperativeName" {...register("cooperativeName")} {...aria("cooperativeName")} autoComplete="organization" />
-                </Field>
-                <Field id="mda" text="MDA" error={errors.mda}>
-                  <Input id="mda" {...register("mda")} {...aria("mda")} placeholder="e.g. Federal Ministry of Finance" />
-                </Field>
-                <Field id="contactPerson" text="Contact person" error={errors.contactPerson}>
-                  <Input id="contactPerson" {...register("contactPerson")} {...aria("contactPerson")} />
-                </Field>
+      <LazyMotion features={domAnimation} strict>
+        <AnimatePresence initial={false}>
+          {isMembership && (
+            <m.fieldset
+              key="membership"
+              initial={reduced ? false : { height: 0, opacity: 0 }}
+              animate={{ height: "auto", opacity: 1 }}
+              exit={reduced ? { opacity: 0 } : { height: 0, opacity: 0 }}
+              transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
+              className="overflow-hidden"
+            >
+              <div className="mb-4 rounded-card border border-cord-line bg-cord-soft/60 p-5">
+                <legend className="t-card mb-4 float-left w-full">About your cooperative society</legend>
+                <div className="clear-both space-y-2">
+                  <Field id="cooperativeName" text="Cooperative society name" error={errors.cooperativeName}>
+                    <Input id="cooperativeName" {...register("cooperativeName")} {...aria("cooperativeName")} autoComplete="organization" />
+                  </Field>
+                  <Field id="mda" text="MDA" error={errors.mda}>
+                    <Input id="mda" {...register("mda")} {...aria("mda")} placeholder="e.g. Federal Ministry of Finance" />
+                  </Field>
+                  <Field id="contactPerson" text="Contact person" error={errors.contactPerson}>
+                    <Input id="contactPerson" {...register("contactPerson")} {...aria("contactPerson")} />
+                  </Field>
+                </div>
               </div>
-            </div>
-          </m.fieldset>
-        )}
-      </AnimatePresence>
+            </m.fieldset>
+          )}
+        </AnimatePresence>
+      </LazyMotion>
 
       <div className="grid gap-x-4 sm:grid-cols-2">
         <Field id="fullName" text="Full name" error={errors.fullName}>

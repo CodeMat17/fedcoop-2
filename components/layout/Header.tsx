@@ -3,10 +3,9 @@
 import { ArrowRight, Search } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { m, useMotionValueEvent, useScroll, useTransform } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import { usePageScroll } from "@/components/motion/MotionProvider";
+import { useReducedMotion, useScrolledPast } from "@/lib/use-motion";
 import { CONTACT_CTA, NAV, NAV_SINGLE, PILLARS, type NavGroup } from "@/lib/site";
 import { btn, cn } from "@/lib/ui";
 import { Logo } from "./Brand";
@@ -19,17 +18,11 @@ const navItem =
 const navActive = "text-cord! after:scale-x-100";
 
 export function Header() {
-  const { scrollY } = useScroll();
-  const { reduced } = usePageScroll();
-  const [scrolled, setScrolled] = useState(false);
+  const reduced = useReducedMotion();
+  const scrolled = useScrolledPast(80);
   const [open, setOpen] = useState<string | null>(null);
   const pathname = usePathname();
   const navRef = useRef<HTMLElement>(null);
-
-  useMotionValueEvent(scrollY, "change", (y) => setScrolled(y > 80));
-  const barY = useTransform(scrollY, [0, 80], [0, reduced ? 0 : -12], {
-    clamp: true,
-  });
 
   // Close the mega panel on navigation (state adjusted during render, not in an effect)
   const [lastPath, setLastPath] = useState(pathname);
@@ -60,15 +53,20 @@ export function Header() {
     // Fixed 88px footprint so page content never jumps; the plate and bar shrink visually via transforms.
     <header className="sticky top-0 z-50 h-22">
       {/* Background plate: scales from 88px to 64px; transform + opacity only */}
-      <m.div
+      <div
         aria-hidden="true"
-        className="pointer-events-none absolute inset-0 border-b border-cord-line/70 bg-paper/80 shadow-[0_8px_30px_-18px_rgb(16_26_23/0.25)] backdrop-blur-xl backdrop-saturate-150"
-        initial={false}
-        animate={{ opacity: solid ? 1 : 0, scaleY: scrolled && !reduced ? 64 / 88 : 1 }}
-        transition={{ duration: reduced ? 0 : 0.2 }}
-        style={{ transformOrigin: "top" }}
+        className={cn(
+          "pointer-events-none absolute inset-0 origin-top border-b border-cord-line/70 bg-paper/80 shadow-[0_8px_30px_-18px_rgb(16_26_23/0.25)] backdrop-blur-xl backdrop-saturate-150 transition-[opacity,scale] duration-200 motion-reduce:transition-none",
+          solid ? "opacity-100" : "opacity-0",
+          scrolled && "motion-safe:scale-y-[0.7273]",
+        )}
       />
-      <m.div className="shell flex h-full items-center gap-4" style={{ y: barY }}>
+      <div
+        className={cn(
+          "shell flex h-full items-center gap-4 transition-transform duration-200",
+          scrolled && "motion-safe:-translate-y-3",
+        )}
+      >
         <Logo />
 
         <nav ref={navRef} aria-label="Main" className="ml-4 hidden flex-1 xl:block">
@@ -158,7 +156,7 @@ export function Header() {
           </Link>
           <MobileNav />
         </div>
-      </m.div>
+      </div>
     </header>
   );
 }

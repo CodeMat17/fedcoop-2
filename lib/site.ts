@@ -224,3 +224,14 @@ export const NAV: NavGroup[] = [
 export const NAV_SINGLE: NavLink[] = [{ label: "Contact", href: "/contact" }];
 
 export const CONTACT_CTA = { label: "Contact FEDCOOP", short: "Contact Us", href: "/contact" } as const;
+
+/* Shared Open Graph fields. A page that sets its own `openGraph` replaces the root one wholesale,
+   so it must spread these back in (and fall back to the site image) or they are lost. */
+export const OG_IMAGE = {
+  url: "/opengraph-image.jpg",
+  width: 1200,
+  height: 675,
+  alt: `FEDCOOP logo: ${SITE.legalName}`,
+} as const;
+
+export const OG_DEFAULTS = { siteName: "FEDCOOP", locale: "en_NG" } as const;

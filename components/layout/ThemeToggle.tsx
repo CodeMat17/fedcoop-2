@@ -1,6 +1,5 @@
 "use client";
 
-import { AnimatePresence, m } from "framer-motion";
 import { Moon, Sun } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useSyncExternalStore } from "react";
@@ -8,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/ui";
 
 const subscribe = () => () => {};
+const icon = "col-start-1 row-start-1 size-5 transition-[rotate,opacity] duration-200";
 
 export function ThemeToggle({ className }: { className?: string }) {
   const { resolvedTheme, setTheme } = useTheme();
@@ -28,18 +28,9 @@ export function ThemeToggle({ className }: { className?: string }) {
         className,
       )}
     >
-      <AnimatePresence initial={false} mode="wait">
-        <m.span
-          key={dark ? "moon" : "sun"}
-          initial={{ rotate: -180, opacity: 0 }}
-          animate={{ rotate: 0, opacity: 1 }}
-          exit={{ rotate: 180, opacity: 0 }}
-          transition={{ duration: 0.2 }}
-          className="grid place-items-center"
-        >
-          {dark ? <Moon className="size-5" strokeWidth={1.5} /> : <Sun className="size-5" strokeWidth={1.5} />}
-        </m.span>
-      </AnimatePresence>
+      {/* Both icons share one grid cell; the outgoing one turns away as the other turns in. */}
+      <Sun className={cn(icon, dark ? "rotate-180 opacity-0" : "rotate-0 opacity-100")} strokeWidth={1.5} aria-hidden="true" />
+      <Moon className={cn(icon, dark ? "rotate-0 opacity-100" : "-rotate-180 opacity-0")} strokeWidth={1.5} aria-hidden="true" />
     </Button>
   );
 }

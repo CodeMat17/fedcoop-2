@@ -13,6 +13,8 @@
   --cord-line: #c7dad2;
   --brass: #b5761a;
   --brass-soft: #f6e9d2;
+  /* brass darkened for small text: 4.5:1 on paper, raise and the hero ground */
+  --brass-ink: #8a5a12;
   --ink: #101a17;
   --ink-muted: #4b5b55;
   --paper: #f6f8f6;
@@ -49,6 +51,7 @@
   --cord-line: #1e362e;
   --brass: #e3a233;
   --brass-soft: #2a2013;
+  --brass-ink: #e3a233;
   --ink: #f2f5f3;
   --ink-muted: #9aaea6;
   --paper: #08110e;
@@ -66,6 +69,7 @@
   --color-cord-line: var(--cord-line);
   --color-brass: var(--brass);
   --color-brass-soft: var(--brass-soft);
+  --color-brass-ink: var(--brass-ink);
   --color-ink: var(--ink);
   --color-ink-muted: var(--ink-muted);
   --color-paper: var(--paper);
@@ -141,7 +145,7 @@
   letter-spacing: 0.16em;
   line-height: 1.4;
   text-transform: uppercase;
-  color: var(--brass);
+  color: var(--brass-ink);
   &::before {
     content: "";
     width: 1.75rem;
@@ -313,6 +317,74 @@
   inset: auto 0 0 0;
   height: 30%;
   background: linear-gradient(to bottom, transparent, var(--paper));
+}
+
+/* Hero entrance — CSS, not framer, so the hero paints before hydration (LCP) */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+.rise {
+  animation: rise 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Client-navigation page entrance (app/template.tsx) */
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+}
+.page-enter {
+  animation: page-enter 0.24s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Scroll reveal (components/motion/reveal.tsx): hidden until IntersectionObserver marks it shown */
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal[data-shown] {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* Scroll cords (components/cord/Cord.tsx) read --page-progress, set by MotionProvider */
+.cord-fill {
+  stroke-dasharray: 1 1;
+  stroke-dashoffset: calc(1 - var(--page-progress, 0));
+  transition: stroke-dashoffset 0.15s ease-out;
+}
+.cord-progress {
+  transform: scaleX(var(--page-progress, 0));
+  transition: transform 0.15s ease-out;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cord-fill {
+    stroke-dashoffset: 0;
+  }
+  .cord-progress {
+    transform: none;
+  }
+}
+@keyframes cord-node-pop {
+  50% {
+    transform: scale(1.35);
+  }
+}
+.cord-node-lit {
+  animation: cord-node-pop 0.7s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Hero network — breathing after the draw-in */

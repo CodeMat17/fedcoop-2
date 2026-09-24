@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef, useState, type FormEvent } from "react";
-import { toast } from "sonner";
 import { callForm, formError } from "@/lib/convex-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -26,7 +25,7 @@ export function Newsletter() {
       const res = await callForm("subscribe", { email, website: honeypot, startedAt: started.current });
       if (!res.ok) throw new Error(res.reason);
       setState("done");
-      toast.success("Subscribed to FEDCOOP updates.");
+      import("sonner").then(({ toast }) => toast.success("Subscribed to FEDCOOP updates."));
     } catch (err) {
       setState("idle");
       setError(formError(err instanceof Error ? err.message : undefined));

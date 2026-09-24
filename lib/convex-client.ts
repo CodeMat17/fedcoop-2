@@ -1,15 +1,14 @@
 "use client";
 
-import { ConvexHttpClient } from "convex/browser";
-import { anyApi } from "convex/server";
-
 type Result = { ok: boolean; reason?: string };
 
 const url = process.env.NEXT_PUBLIC_CONVEX_URL;
 
-/** Calls a public Convex form action directly from the browser — no Vercel function involved. */
+/** Calls a public Convex form action directly from the browser — no Vercel function involved.
+ *  The Convex client is imported on submit, so it never weighs on page load. */
 export async function callForm(name: "submitEnquiry" | "submitRsvp" | "subscribe", args: Record<string, unknown>): Promise<Result> {
   if (!url) return { ok: false, reason: "offline" };
+  const [{ ConvexHttpClient }, { anyApi }] = await Promise.all([import("convex/browser"), import("convex/server")]);
   const client = new ConvexHttpClient(url);
   return (await client.action(anyApi.forms[name], args)) as Result;
 }

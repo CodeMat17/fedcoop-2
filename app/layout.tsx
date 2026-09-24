@@ -7,7 +7,7 @@ import { CommandSearch } from "@/components/layout/CommandSearch";
 import { MobileProgress } from "@/components/cord/Cord";
 import { JsonLd } from "@/components/shared/JsonLd";
 import { PublicOnly } from "@/components/layout/PublicOnly";
-import { SITE, SOCIALS } from "@/lib/site";
+import { OG_DEFAULTS, SITE, SOCIALS } from "@/lib/site";
 import "./globals.css";
 
 const sans = Nunito({
@@ -17,14 +17,41 @@ const sans = Nunito({
   display: "swap",
 });
 
+/* og:image / twitter:image come from app/opengraph-image.jpg (+ .alt.txt) via the file convention;
+   setting `images` here would override it. og/twitter title and description are left unset so Next fills
+   them from each page's own title and description. Pages that set their own `openGraph` use OG_DEFAULTS/OG_IMAGE. */
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: { default: `FEDCOOP — ${SITE.legalName}`, template: "%s | FEDCOOP" },
   description: SITE.description,
   applicationName: "FEDCOOP",
-  openGraph: { type: "website", siteName: "FEDCOOP", locale: "en_NG" },
-  twitter: { card: "summary_large_image", site: "@FEDCOOP_ng" },
-  alternates: { canonical: "/" },
+  keywords: [
+    "FEDCOOP",
+    "cooperative societies",
+    "staff cooperatives",
+    "federal civil service",
+    "Nigeria cooperatives",
+    "MDA cooperatives",
+    "cooperative union",
+    "Abuja",
+  ],
+  authors: [{ name: SITE.legalName, url: SITE.url }],
+  creator: SITE.legalName,
+  publisher: SITE.legalName,
+  category: "Cooperatives",
+  referrer: "origin-when-cross-origin",
+  formatDetection: { email: false, address: false, telephone: false },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 },
+  },
+  openGraph: { ...OG_DEFAULTS, type: "website" },
+  twitter: {
+    card: "summary_large_image",
+    site: "@FEDCOOP_ng",
+    creator: "@FEDCOOP_ng",
+  },
 };
 
 export const viewport: Viewport = {

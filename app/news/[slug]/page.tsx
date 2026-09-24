@@ -7,7 +7,7 @@ import { PageHero, Rich } from "@/components/shared/Page";
 import { ShareRow } from "@/components/shared/ShareRow";
 import { getPost, getPosts } from "@/lib/data";
 import { fmtDate, readingTime } from "@/lib/format";
-import { SITE, pillarBySlug } from "@/lib/site";
+import { OG_DEFAULTS, OG_IMAGE, SITE, pillarBySlug } from "@/lib/site";
 
 export const revalidate = 3600;
 
@@ -22,7 +22,13 @@ export async function generateMetadata({ params }: PageProps<"/news/[slug]">): P
     title: post.title,
     description: post.excerpt,
     alternates: { canonical: `/news/${post.slug}` },
-    openGraph: { type: "article", publishedTime: new Date(post.publishedAt).toISOString(), images: post.coverUrl ? [post.coverUrl] : undefined },
+    openGraph: {
+      ...OG_DEFAULTS,
+      type: "article",
+      url: `/news/${post.slug}`,
+      publishedTime: new Date(post.publishedAt).toISOString(),
+      images: post.coverUrl ? [post.coverUrl] : [OG_IMAGE],
+    },
   };
 }
 

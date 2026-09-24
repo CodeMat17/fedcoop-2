@@ -145,12 +145,12 @@ export function Directory({ coops }: { coops: Cooperative[] }) {
                 <span
                   className={cn(
                     "min-w-0 flex-1 transition-colors duration-200",
-                    c.isRegistered ? "font-bold text-ink group-hover:text-cord" : "font-semibold text-ink-muted/70 group-hover:text-ink-muted",
+                    c.isRegistered ? "font-bold text-ink group-hover:text-cord" : "font-semibold text-ink-muted group-hover:text-ink",
                   )}
                 >
                   {c.name}
                 </span>
-                <RegistrationBadge registered={c.isRegistered} className={c.isRegistered ? undefined : "opacity-80"} />
+                <RegistrationBadge registered={c.isRegistered} />
                 <ChevronRight
                   className="size-4 shrink-0 -translate-x-1 text-ink-muted opacity-0 transition-all duration-200 group-hover:translate-x-0 group-hover:opacity-100 max-sm:hidden"
                   strokeWidth={1.5}

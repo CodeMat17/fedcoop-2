@@ -28,7 +28,7 @@ export function DirectorCard({ d, large = false }: { d: Director; large?: boolea
       </div>
       <div className="border-t border-cord-line p-5 text-left">
         <p className={large ? "t-card" : "text-base leading-snug font-bold"}>{d.name}</p>
-        <p className="mt-1.5 text-[0.72rem] font-bold tracking-[0.12em] text-brass uppercase">{d.office}</p>
+        <p className="mt-1.5 text-[0.72rem] font-bold tracking-[0.12em] text-brass-ink uppercase">{d.office}</p>
       </div>
     </>
   );

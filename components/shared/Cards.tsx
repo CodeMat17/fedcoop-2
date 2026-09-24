@@ -48,7 +48,7 @@ export function PostCard({ post }: { post: Post }) {
     <article className={cn(card, lift)}>
       <Cover src={post.coverUrl} alt={post.coverAlt ?? ""} />
       <div className="flex flex-1 flex-col p-6">
-        <time dateTime={new Date(post.publishedAt).toISOString()} className="t-meta tracking-[0.08em] text-brass uppercase">
+        <time dateTime={new Date(post.publishedAt).toISOString()} className="t-meta tracking-[0.08em] text-brass-ink uppercase">
           {fmtDate(post.publishedAt)}
         </time>
         <h3 className="t-card mt-3 text-balance">
@@ -74,7 +74,7 @@ export function EventCard({ event }: { event: EventItem }) {
         </span>
       </Cover>
       <div className="flex flex-1 flex-col p-6">
-        <p className="t-meta flex items-center gap-1.5 tracking-[0.08em] text-brass uppercase">
+        <p className="t-meta flex items-center gap-1.5 tracking-[0.08em] text-brass-ink uppercase">
           <CalendarDays className="size-3.5" strokeWidth={1.5} aria-hidden="true" />
           <time dateTime={new Date(event.startsAt).toISOString()}>
             {fmtDateShort(event.startsAt)} · {fmtTime(event.startsAt)}

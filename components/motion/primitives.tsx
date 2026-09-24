@@ -1,31 +1,11 @@
 "use client";
 
-import {
-  m,
-  animate,
-  useInView,
-  useReducedMotion,
-  useMotionValue,
-  type Variants,
-} from "framer-motion";
-import { useEffect, useRef, useState, type CSSProperties, type ReactNode, type PointerEvent } from "react";
+import { LazyMotion, domAnimation, m, animate, useInView, useReducedMotion, type Variants } from "framer-motion";
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from "react";
 import { dur, ease, inView } from "@/lib/motion";
 
-export function Reveal({ children, delay = 0, className }: { children: ReactNode; delay?: number; className?: string }) {
-  const reduced = useReducedMotion();
-  if (reduced) return <div className={className}>{children}</div>;
-  return (
-    <m.div
-      className={className}
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={inView}
-      transition={{ duration: dur.slow, ease: ease.out, delay }}
-    >
-      {children}
-    </m.div>
-  );
-}
+/* framer-motion lives here, off the shared bundle: only pages that use these load it.
+   Reveal and Magnetic are CSS-based, in ./reveal. */
 
 const staggerParent = (step: number): Variants => ({ hidden: {}, show: { transition: { staggerChildren: step } } });
 const staggerChild: Variants = {
@@ -51,9 +31,11 @@ export function Stagger({
     return <Plain className={className}>{children}</Plain>;
   }
   return (
-    <Tag className={className} variants={staggerParent(step)} initial="hidden" whileInView="show" viewport={inView}>
-      {children}
-    </Tag>
+    <LazyMotion features={domAnimation} strict>
+      <Tag className={className} variants={staggerParent(step)} initial="hidden" whileInView="show" viewport={inView}>
+        {children}
+      </Tag>
+    </LazyMotion>
   );
 }
 
@@ -115,29 +97,5 @@ export function CountUp({ value, suffix = "" }: { value: number | null; suffix?:
         {suffix}
       </span>
     </span>
-  );
-}
-
-/** 6px pull toward the pointer. Primary CTA only; ignored for touch (§7). */
-export function Magnetic({ children }: { children: ReactNode }) {
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const reduced = useReducedMotion();
-
-  const onMove = (e: PointerEvent<HTMLSpanElement>) => {
-    if (reduced || e.pointerType !== "mouse") return;
-    const r = e.currentTarget.getBoundingClientRect();
-    x.set(((e.clientX - (r.left + r.width / 2)) / (r.width / 2)) * 6);
-    y.set(((e.clientY - (r.top + r.height / 2)) / (r.height / 2)) * 6);
-  };
-  const reset = () => {
-    animate(x, 0, { duration: dur.fast });
-    animate(y, 0, { duration: dur.fast });
-  };
-
-  return (
-    <m.span className="inline-flex" style={{ x, y }} onPointerMove={onMove} onPointerLeave={reset}>
-      {children}
-    </m.span>
   );
 }
