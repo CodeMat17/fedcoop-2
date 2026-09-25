@@ -73,14 +73,14 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         </a>
         <Providers>
           <PublicOnly>
-            {/* <Header /> */}
+            <Header />
             <MobileProgress />
           </PublicOnly>
           <main id="main" className="relative flex-1">
             {children}
           </main>
           <PublicOnly>
-            {/* <Footer /> */}
+            <Footer />
             <CommandSearch />
           </PublicOnly>
         </Providers>
