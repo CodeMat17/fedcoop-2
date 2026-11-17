@@ -51,7 +51,7 @@ export default function Dashboard() {
         ))}
       </ul>
 
-      <div className="mt-8 grid gap-6 lg:grid-cols-2">
+      <div className="mt-8 grid grid-cols-1 gap-6 lg:grid-cols-2 *:min-w-0">
         <Panel
           title="Latest enquiries"
           actions={
@@ -66,7 +66,7 @@ export default function Dashboard() {
             <ul className="divide-y divide-cord-line/70">
               {s.recentEnquiries.map((e) => (
                 <li key={e._id} className="flex items-center justify-between gap-3 py-3">
-                  <div className="min-w-0">
+                  <div className="min-w-0 flex-1">
                     <p className="truncate font-bold">{e.fullName}</p>
                     <p className="truncate text-[0.85rem] text-ink-muted">
                       {ENQUIRY_CATEGORIES.find((c) => c.value === e.category)?.label ?? e.category}
@@ -95,7 +95,7 @@ export default function Dashboard() {
               {s.recentPosts.map((p) => (
                 <li key={p._id}>
                   <Link href={`/admin/news/${p._id}`} className="flex items-center justify-between gap-3 py-3 hover:text-cord">
-                    <div className="min-w-0">
+                    <div className="min-w-0 flex-1">
                       <p className="truncate font-bold">{p.title}</p>
                       <p className="text-[0.85rem] text-ink-muted">{fmtDate(p.publishedAt)}</p>
                     </div>

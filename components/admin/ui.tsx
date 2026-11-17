@@ -169,7 +169,7 @@ export function Status({ on, onLabel = "Published", offLabel = "Draft" }: { on: 
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[0.78rem] font-bold",
+        "inline-flex shrink-0 items-center gap-1.5 rounded-full px-2.5 py-0.5 text-[0.78rem] font-bold whitespace-nowrap",
         on ? "bg-cord-soft text-cord" : "bg-brass-soft text-brass",
       )}
     >

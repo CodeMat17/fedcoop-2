@@ -6,9 +6,9 @@ export const SITE = {
   url: process.env.NEXT_PUBLIC_SITE_URL ?? "https://fedcoop.org",
   description:
     "FEDCOOP is the national union of staff cooperative societies in Nigeria's federal Ministries, Departments and Agencies.",
-  address: ["Federal Secretariat Complex", "Phase 1, Abuja, FCT", "Nigeria"],
-  phone: "+234 (0) 916 248 4000",
-  phoneHref: "tel:+2349162484000",
+  address: ["C/o NEPZA Cooperative, No: 2 Zambezi street, Maitland, Abuja, FCT", "Nigeria"],
+  phone: "+234 (0) 806 551 6656",
+  phoneHref: "tel:+2349065516656",
   email: "email@fedcoop.org",
   hours: "Monday to Friday, 8:00 to 16:00 WAT",
 } as const;

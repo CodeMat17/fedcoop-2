@@ -230,7 +230,7 @@ const PAGES: { key: string; title: string; body: string }[] = [
   {
     key: "vision",
     title: "Our Vision",
-    body: "<p>A Nigeria where every federal worker belongs to a strong, well-governed cooperative, and where those cooperatives are united as one federation that builds lasting prosperity for members and the nation.</p>",
+    body: "<p>A cooperative world without hunger and poverty.</p>",
   },
   {
     key: "values",
